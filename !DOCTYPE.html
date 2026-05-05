@@ -1,0 +1,2785 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Historia Clínica · Fisioterapia</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0f1117;
+  --ink-mid: #3d404a;
+  --ink-soft: #7a7d8a;
+  --ink-faint: #b8bac5;
+  --bg: #f4f2ee;
+  --bg-warm: #ede9e2;
+  --surface: #ffffff;
+  --surface2: #f8f6f2;
+  --border: #dddad3;
+  --border-strong: #c4c0b6;
+
+  --teal: #0d6e6e;
+  --teal-light: #e0f0f0;
+  --teal-mid: #1a8585;
+  --teal-dark: #084f4f;
+
+  --amber: #b45309;
+  --amber-light: #fef3c7;
+  --amber-mid: #d97706;
+
+  --red: #991b1b;
+  --red-light: #fef2f2;
+  --red-mid: #dc2626;
+
+  --blue: #1e3a5f;
+  --blue-light: #eff6ff;
+  --blue-mid: #2563eb;
+
+  --green: #14532d;
+  --green-light: #f0fdf4;
+  --green-mid: #16a34a;
+
+  --serif: 'DM Serif Display', Georgia, serif;
+  --sans: 'DM Sans', system-ui, sans-serif;
+  --mono: 'DM Mono', monospace;
+
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.06);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ── SIDEBAR NAV ─────────────────────────────────────────────────────────── */
+.sidebar {
+  position: fixed;
+  left: 0; top: 0; bottom: 0;
+  width: 240px;
+  background: var(--ink);
+  display: flex;
+  flex-direction: column;
+  z-index: 200;
+  overflow: hidden;
+}
+
+.sidebar-logo {
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.sidebar-logo .brand {
+  font-family: var(--serif);
+  font-size: 20px;
+  color: #fff;
+  line-height: 1.1;
+  letter-spacing: -0.3px;
+}
+.sidebar-logo .brand em {
+  color: var(--teal-mid);
+  font-style: italic;
+}
+.sidebar-logo .sub {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  margin-top: 4px;
+}
+
+.sidebar-nav { flex: 1; overflow-y: auto; padding: 12px 0; scrollbar-width: none; }
+.sidebar-nav::-webkit-scrollbar { display: none; }
+
+.nav-group-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+  padding: 12px 20px 4px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 20px;
+  cursor: pointer;
+  transition: all 0.15s;
+  border-left: 2px solid transparent;
+  text-decoration: none;
+}
+.nav-item:hover { background: rgba(255,255,255,0.05); }
+.nav-item.active {
+  background: rgba(13,110,110,0.15);
+  border-left-color: var(--teal-mid);
+}
+.nav-item .nav-num {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: rgba(255,255,255,0.25);
+  min-width: 18px;
+}
+.nav-item.active .nav-num { color: var(--teal-mid); }
+.nav-item .nav-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 0.1px;
+}
+.nav-item.active .nav-label { color: #fff; }
+.nav-item .nav-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--border);
+  margin-left: auto;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+.nav-item.done .nav-dot { background: var(--teal-mid); }
+.nav-item .nav-icon {
+  font-size: 13px;
+  width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.sidebar-footer {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  gap: 8px;
+}
+.btn-sidebar {
+  flex: 1;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 8px 6px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: transparent;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.15s;
+  text-align: center;
+}
+.btn-sidebar:hover { border-color: rgba(255,255,255,0.35); color: #fff; }
+.btn-sidebar.primary {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: #fff;
+}
+.btn-sidebar.primary:hover { background: var(--teal-mid); }
+
+/* ── MAIN AREA ───────────────────────────────────────────────────────────── */
+.main {
+  margin-left: 240px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-sm);
+}
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.topbar-section {
+  font-family: var(--serif);
+  font-size: 17px;
+  color: var(--ink);
+  letter-spacing: -0.2px;
+}
+.topbar-breadcrumb {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-soft);
+  letter-spacing: 0.5px;
+}
+.topbar-sep { color: var(--border-strong); }
+
+.progress-strip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.progress-bar-outer {
+  width: 120px;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-bar-inner {
+  height: 100%;
+  background: linear-gradient(90deg, var(--teal), var(--teal-mid));
+  border-radius: 2px;
+  transition: width 0.4s ease;
+  width: 0%;
+}
+.progress-text {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--teal);
+  font-weight: 500;
+  min-width: 30px;
+}
+
+/* ── PANELS ──────────────────────────────────────────────────────────────── */
+.content { flex: 1; padding: 32px; }
+.panel { display: none; animation: fadeIn 0.2s ease; }
+.panel.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── SECTION ANATOMY ─────────────────────────────────────────────────────── */
+.page-header {
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid var(--border);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+.page-header-left {}
+.page-number {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 4px;
+}
+.page-title {
+  font-family: var(--serif);
+  font-size: 28px;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+}
+.page-title em { color: var(--teal); font-style: italic; }
+.page-subtitle {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-top: 5px;
+}
+.nav-arrows {
+  display: flex;
+  gap: 6px;
+}
+.btn-arrow {
+  width: 34px; height: 34px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  color: var(--ink-soft);
+  transition: all 0.12s;
+}
+.btn-arrow:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
+
+/* ── CARDS ───────────────────────────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.card-header {
+  padding: 12px 20px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.card-header-icon {
+  width: 28px; height: 28px;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.card-title {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ink-mid);
+  font-weight: 500;
+}
+.card-body { padding: 20px; }
+
+/* card accent colors */
+.card.accent-teal .card-header { background: var(--teal-light); border-color: #b2d8d8; }
+.card.accent-teal .card-header-icon { background: var(--teal); color: #fff; }
+.card.accent-teal .card-title { color: var(--teal-dark); }
+.card.accent-amber .card-header { background: var(--amber-light); border-color: #fcd34d; }
+.card.accent-amber .card-header-icon { background: var(--amber); color: #fff; }
+.card.accent-amber .card-title { color: #92400e; }
+.card.accent-red .card-header { background: var(--red-light); border-color: #fca5a5; }
+.card.accent-red .card-header-icon { background: var(--red); color: #fff; }
+.card.accent-red .card-title { color: var(--red); }
+.card.accent-blue .card-header { background: var(--blue-light); border-color: #bfdbfe; }
+.card.accent-blue .card-header-icon { background: var(--blue); color: #fff; }
+.card.accent-blue .card-title { color: var(--blue); }
+.card.accent-green .card-header { background: var(--green-light); border-color: #bbf7d0; }
+.card.accent-green .card-header-icon { background: var(--green); color: #fff; }
+.card.accent-green .card-title { color: var(--green); }
+
+/* ── GRID SYSTEM ─────────────────────────────────────────────────────────── */
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.g3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.g4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 14px; }
+.g13 { display: grid; grid-template-columns: 1fr 3fr; gap: 14px; }
+.g31 { display: grid; grid-template-columns: 3fr 1fr; gap: 14px; }
+.full { grid-column: 1 / -1; }
+@media (max-width: 900px) {
+  .g3, .g4 { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .g2, .g3, .g4 { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .main { margin-left: 0; }
+}
+
+/* ── FORM FIELDS ─────────────────────────────────────────────────────────── */
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field label {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.field input,
+.field select,
+.field textarea {
+  font-family: var(--sans);
+  font-size: 13.5px;
+  padding: 9px 12px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: 7px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+  -webkit-appearance: none;
+}
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(13,110,110,0.1);
+}
+.field textarea {
+  resize: vertical;
+  min-height: 72px;
+  line-height: 1.55;
+}
+.field select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237a7d8a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+
+/* ── CHIPS ───────────────────────────────────────────────────────────────── */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  padding: 5px 11px;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  cursor: pointer;
+  background: var(--surface);
+  color: var(--ink-mid);
+  transition: all 0.12s;
+  user-select: none;
+  letter-spacing: 0.2px;
+}
+.chip:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
+.chip.sel { background: var(--teal); border-color: var(--teal); color: #fff; }
+.chip.sel-red { background: var(--red); border-color: var(--red); color: #fff; }
+.chip.sel-amber { background: var(--amber); border-color: var(--amber); color: #fff; }
+.chip.sel-blue { background: var(--blue); border-color: var(--blue); color: #fff; }
+
+/* ── VAS SLIDER ──────────────────────────────────────────────────────────── */
+.vas-wrap { display: flex; flex-direction: column; gap: 6px; }
+.vas-row { display: flex; align-items: center; gap: 14px; }
+.vas-labels { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 9px; color: var(--ink-faint); letter-spacing: 0.5px; }
+input[type=range] {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right, var(--green-mid) 0%, #facc15 45%, var(--red-mid) 100%);
+  outline: none;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 2.5px solid var(--teal);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  cursor: pointer;
+  transition: box-shadow 0.15s;
+}
+input[type=range]::-webkit-slider-thumb:hover {
+  box-shadow: 0 2px 10px rgba(13,110,110,0.3);
+}
+.vas-val {
+  font-family: var(--serif);
+  font-size: 24px;
+  min-width: 30px;
+  text-align: center;
+  color: var(--teal-dark);
+  line-height: 1;
+}
+.vas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* ── BODY CHART ──────────────────────────────────────────────────────────── */
+.body-chart-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.4fr;
+  gap: 16px;
+  align-items: start;
+}
+.body-figure h5 {
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--ink-soft);
+  text-align: center;
+  margin-bottom: 8px;
+}
+.body-canvas-wrap {
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface2);
+  padding: 8px;
+  position: relative;
+  cursor: crosshair;
+  overflow: hidden;
+}
+.body-canvas-wrap svg { display: block; width: 100%; height: auto; }
+.pain-dot {
+  position: absolute;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  border: 2px solid rgba(255,255,255,0.8);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  animation: dotPop 0.2s ease;
+}
+@keyframes dotPop {
+  from { transform: translate(-50%, -50%) scale(0); }
+  to { transform: translate(-50%, -50%) scale(1); }
+}
+.chart-tools-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.tool-btn {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 5px 10px;
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.12s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--ink-mid);
+}
+.tool-btn .dot-preview {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+}
+.tool-btn.active { border-color: var(--ink); background: var(--ink); color: #fff; }
+.chart-legend { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 10px; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--ink-mid); }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.8); }
+
+/* ── FLAGS ───────────────────────────────────────────────────────────────── */
+.flags-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.flag-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.12s;
+  background: var(--surface);
+}
+.flag-item:hover { border-color: var(--ink-soft); }
+.flag-item.flagged-red { border-color: var(--red-mid); background: var(--red-light); }
+.flag-item.flagged-yellow { border-color: var(--amber-mid); background: var(--amber-light); }
+.flag-item input[type=checkbox] { width: 15px; height: 15px; accent-color: var(--teal); flex-shrink: 0; cursor: pointer; }
+.flag-item label { font-size: 12px; cursor: pointer; line-height: 1.35; color: var(--ink-mid); }
+.flag-badge {
+  font-family: var(--mono);
+  font-size: 8.5px;
+  letter-spacing: 0.5px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-left: auto;
+  flex-shrink: 0;
+  text-transform: uppercase;
+}
+.badge-red { background: var(--red-mid); color: #fff; }
+.badge-yellow { background: var(--amber-mid); color: #fff; }
+
+/* ── TABLES ──────────────────────────────────────────────────────────────── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+.data-table th {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  text-align: left;
+  padding: 9px 12px;
+  background: var(--surface2);
+  border-bottom: 1.5px solid var(--border);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.data-table th.center { text-align: center; }
+.data-table td {
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: var(--surface2); }
+.data-table td input[type=number],
+.data-table td input[type=text] {
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 5px 8px;
+  border: 1.5px solid var(--border);
+  border-radius: 5px;
+  outline: none;
+  background: var(--surface);
+  color: var(--ink);
+  width: 70px;
+  text-align: center;
+  transition: border-color 0.12s;
+}
+.data-table td input[type=text].wide { width: 110px; }
+.data-table td input:focus { border-color: var(--teal); }
+.data-table td .result-sel {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  padding: 4px 8px;
+  border: 1.5px solid var(--border);
+  border-radius: 5px;
+  background: var(--surface);
+  cursor: pointer;
+  outline: none;
+  transition: all 0.12s;
+}
+.data-table td .result-sel:focus { border-color: var(--teal); }
+.data-table td .result-sel.pos { background: var(--red-light); border-color: #fca5a5; color: var(--red); }
+.data-table td .result-sel.neg { background: var(--green-light); border-color: #bbf7d0; color: var(--green); }
+.data-table td .result-sel.alt { background: var(--amber-light); border-color: #fcd34d; color: var(--amber); }
+
+/* ── REASONING BOX ───────────────────────────────────────────────────────── */
+.reasoning-panel {
+  background: linear-gradient(135deg, #fefce8 0%, #fff9e6 100%);
+  border: 1.5px solid #fde68a;
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-top: 16px;
+}
+.reasoning-panel .rp-head {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--amber);
+  font-weight: 500;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.reasoning-panel ul { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.reasoning-panel li {
+  font-size: 12.5px;
+  color: #78350f;
+  padding-left: 16px;
+  position: relative;
+  line-height: 1.45;
+}
+.reasoning-panel li::before { content: '→'; position: absolute; left: 0; color: var(--amber-mid); }
+
+/* ── INFO NOTE ───────────────────────────────────────────────────────────── */
+.info-note {
+  background: var(--blue-light);
+  border: 1.5px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 12px;
+  color: #1e40af;
+  line-height: 1.55;
+  margin-top: 12px;
+}
+.info-note strong { font-weight: 600; }
+
+.warn-note {
+  background: var(--amber-light);
+  border: 1.5px solid #fcd34d;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 12px;
+  color: #92400e;
+  line-height: 1.55;
+  margin-top: 12px;
+}
+
+.alert-note {
+  background: var(--red-light);
+  border: 1.5px solid #fca5a5;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 12px;
+  color: #991b1b;
+  line-height: 1.55;
+  margin-top: 12px;
+}
+
+/* ── CONSENT SPECIAL ─────────────────────────────────────────────────────── */
+.consent-block {
+  background: var(--surface2);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--ink-mid);
+}
+.consent-block .blank { display: inline-block; border-bottom: 1.5px solid var(--border-strong); min-width: 200px; height: 18px; vertical-align: bottom; }
+.consent-block .blank-sm { display: inline-block; border-bottom: 1.5px solid var(--border-strong); min-width: 100px; height: 18px; vertical-align: bottom; }
+
+.checkbox-list { display: flex; flex-direction: column; gap: 10px; margin: 14px 0; }
+.checkbox-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.checkbox-item:hover { border-color: var(--teal); }
+.checkbox-item.checked { border-color: var(--teal); background: var(--teal-light); }
+.checkbox-item input[type=checkbox] {
+  width: 16px; height: 16px;
+  margin-top: 2px;
+  accent-color: var(--teal);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.checkbox-item label {
+  font-size: 12.5px;
+  cursor: pointer;
+  line-height: 1.5;
+  color: var(--ink-mid);
+}
+
+/* ── SIGNATURE ───────────────────────────────────────────────────────────── */
+.signature-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 20px;
+}
+.signature-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.signature-area {
+  width: 100%;
+  height: 90px;
+  border: 1.5px dashed var(--border-strong);
+  border-radius: 8px;
+  background: var(--surface2);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 8px;
+}
+.signature-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--ink-soft);
+  text-align: center;
+}
+
+/* ── ZONE SELECTOR ───────────────────────────────────────────────────────── */
+.zone-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+.zone-tab {
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 6px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  cursor: pointer;
+  color: var(--ink-mid);
+  transition: all 0.12s;
+  letter-spacing: 0.3px;
+}
+.zone-tab:hover { border-color: var(--teal); color: var(--teal); }
+.zone-tab.active { background: var(--teal); border-color: var(--teal); color: #fff; }
+
+.mob-section, .test-section, .str-section { display: none; }
+
+/* ── STRENGTH MRC ────────────────────────────────────────────────────────── */
+.mrc-scale {
+  display: flex;
+  gap: 4px;
+  font-family: var(--mono);
+}
+.mrc-btn {
+  width: 30px; height: 30px;
+  border: 1.5px solid var(--border);
+  border-radius: 5px;
+  background: var(--surface);
+  cursor: pointer;
+  font-size: 11px;
+  color: var(--ink-mid);
+  transition: all 0.12s;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 500;
+}
+.mrc-btn:hover { border-color: var(--teal); color: var(--teal); }
+.mrc-btn.sel { background: var(--teal); border-color: var(--teal); color: #fff; }
+.mrc-btn.sel-2 { background: var(--amber); border-color: var(--amber); color: #fff; }
+.mrc-btn.sel-1, .mrc-btn.sel-0 { background: var(--red); border-color: var(--red); color: #fff; }
+
+/* ── NEURO TABLE ─────────────────────────────────────────────────────────── */
+.neuro-badge {
+  font-family: var(--mono);
+  font-size: 9px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: var(--surface2);
+  color: var(--ink-soft);
+  border: 1px solid var(--border);
+}
+
+/* ── SUMMARY CARDS ───────────────────────────────────────────────────────── */
+.summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.summary-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+}
+.summary-card .sc-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+}
+.summary-card textarea {
+  font-family: var(--sans);
+  font-size: 13px;
+  padding: 8px 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  width: 100%;
+  min-height: 80px;
+  resize: vertical;
+  outline: none;
+  line-height: 1.5;
+  color: var(--ink);
+  transition: border-color 0.15s;
+}
+.summary-card textarea:focus { border-color: var(--teal); }
+
+/* ── RGPD SPECIAL ────────────────────────────────────────────────────────── */
+.rgpd-article {
+  background: var(--surface);
+  border-left: 3px solid var(--teal);
+  border-radius: 0 8px 8px 0;
+  padding: 14px 16px;
+  margin-bottom: 8px;
+}
+.rgpd-article .art-title {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--teal-dark);
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+.rgpd-article p {
+  font-size: 12.5px;
+  color: var(--ink-mid);
+  line-height: 1.6;
+}
+
+.rights-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+.right-item {
+  background: var(--teal-light);
+  border: 1px solid #b2d8d8;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+}
+.right-item .right-letter {
+  font-family: var(--serif);
+  font-size: 18px;
+  color: var(--teal-dark);
+  font-style: italic;
+  line-height: 1;
+}
+.right-item .right-name {
+  font-family: var(--mono);
+  font-size: 8.5px;
+  color: var(--teal);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 3px;
+}
+
+/* ── RISK TABLE ──────────────────────────────────────────────────────────── */
+.risk-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.risk-col-header {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  text-align: center;
+  font-weight: 500;
+}
+.risk-col-header.red { background: var(--red-light); color: var(--red); border: 1px solid #fca5a5; }
+.risk-col-header.green { background: var(--green-light); color: var(--green); border: 1px solid #bbf7d0; }
+.risk-col-header.amber { background: var(--amber-light); color: var(--amber); border: 1px solid #fcd34d; }
+.risk-item {
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--ink-mid);
+  margin-bottom: 5px;
+}
+.risk-item.red { background: var(--red-light); border-left: 2px solid var(--red-mid); }
+.risk-item.green { background: var(--green-light); border-left: 2px solid var(--green-mid); }
+.risk-item.amber { background: var(--amber-light); border-left: 2px solid var(--amber-mid); }
+
+/* ── PRINT ───────────────────────────────────────────────────────────────── */
+@media print {
+  .sidebar, .topbar { display: none !important; }
+  .main { margin-left: 0; }
+  .content { padding: 10mm; }
+  .panel { display: block !important; page-break-after: always; }
+  .panel:last-child { page-break-after: avoid; }
+  .card { break-inside: avoid; box-shadow: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ─────────────────────────────────────────────────────────── -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">Fisio<em>Clínica</em></div>
+    <div class="sub">Historia Clínica · v2.0</div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-group-label">Legal</div>
+    <div class="nav-item active" onclick="go(0)" data-panel="0">
+      <span class="nav-icon">🔒</span>
+      <span class="nav-num">01</span>
+      <span class="nav-label">Protección de Datos</span>
+      <span class="nav-dot"></span>
+    </div>
+    <div class="nav-item" onclick="go(1)" data-panel="1">
+      <span class="nav-icon">💉</span>
+      <span class="nav-num">02</span>
+      <span class="nav-label">Consentimiento Invasivo</span>
+      <span class="nav-dot"></span>
+    </div>
+
+    <div class="nav-group-label">Anamnesis</div>
+    <div class="nav-item" onclick="go(2)" data-panel="2">
+      <span class="nav-icon">👤</span>
+      <span class="nav-num">03</span>
+      <span class="nav-label">Datos & Historia</span>
+      <span class="nav-dot"></span>
+    </div>
+    <div class="nav-item" onclick="go(3)" data-panel="3">
+      <span class="nav-icon">💬</span>
+      <span class="nav-num">04</span>
+      <span class="nav-label">Motivo de Consulta</span>
+      <span class="nav-dot"></span>
+    </div>
+    <div class="nav-item" onclick="go(4)" data-panel="4">
+      <span class="nav-icon">🔥</span>
+      <span class="nav-num">05</span>
+      <span class="nav-label">Análisis del Dolor</span>
+      <span class="nav-dot"></span>
+    </div>
+    <div class="nav-item" onclick="go(5)" data-panel="5">
+      <span class="nav-icon">🗺</span>
+      <span class="nav-num">06</span>
+      <span class="nav-label">Body Chart</span>
+      <span class="nav-dot"></span>
+    </div>
+
+    <div class="nav-group-label">Exploración</div>
+    <div class="nav-item" onclick="go(6)" data-panel="6">
+      <span class="nav-icon">📐</span>
+      <span class="nav-num">07</span>
+      <span class="nav-label">Análisis Postural</span>
+      <span class="nav-dot"></span>
+    </div>
+    <div class="nav-item" onclick="go(7)" data-panel="7">
+      <span class="nav-icon">🔄</span>
+      <span class="nav-num">08</span>
+      <span class="nav-label">Movilidad</span>
+      <span class="nav-dot"></span>
+    </div>
+    <div class="nav-item" onclick="go(8)" data-panel="8">
+      <span class="nav-icon">💪</span>
+      <span class="nav-num">09</span>
+      <span class="nav-label">Fuerza Muscular</span>
+      <span class="nav-dot"></span>
+    </div>
+    <div class="nav-item" onclick="go(9)" data-panel="9">
+      <span class="nav-icon">⚡</span>
+      <span class="nav-num">10</span>
+      <span class="nav-label">Valoración Neurológica</span>
+      <span class="nav-dot"></span>
+    </div>
+    <div class="nav-item" onclick="go(10)" data-panel="10">
+      <span class="nav-icon">🔬</span>
+      <span class="nav-num">11</span>
+      <span class="nav-label">Tests Ortopédicos</span>
+      <span class="nav-dot"></span>
+    </div>
+
+    <div class="nav-group-label">Síntesis</div>
+    <div class="nav-item" onclick="go(11)" data-panel="11">
+      <span class="nav-icon">🧠</span>
+      <span class="nav-num">12</span>
+      <span class="nav-label">Razonamiento Clínico</span>
+      <span class="nav-dot"></span>
+    </div>
+    <div class="nav-item" onclick="go(12)" data-panel="12">
+      <span class="nav-icon">📋</span>
+      <span class="nav-num">13</span>
+      <span class="nav-label">Resumen Anamnesis</span>
+      <span class="nav-dot"></span>
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <button class="btn-sidebar" onclick="clearAll()">Limpiar</button>
+    <button class="btn-sidebar" onclick="printSession()">🖨 Imprimir</button>
+    <button class="btn-sidebar primary" onclick="saveToLocal()">💾 Guardar</button>
+  </div>
+</aside>
+
+<!-- ── MAIN ─────────────────────────────────────────────────────────────── -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-breadcrumb">Historia Clínica <span class="topbar-sep">›</span></span>
+      <span class="topbar-section" id="topbar-title">Protección de Datos</span>
+    </div>
+    <div class="progress-strip">
+      <div class="progress-bar-outer"><div class="progress-bar-inner" id="pbar"></div></div>
+      <span class="progress-text" id="ptext">0%</span>
+    </div>
+  </div>
+
+  <div class="content">
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+  PANEL 0 — PROTECCIÓN DE DATOS (RGPD)
+══════════════════════════════════════════════════════════════════════════ -->
+<div class="panel active" id="p0">
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-number">01 · Legal</div>
+      <h1 class="page-title">Protección de <em>Datos</em></h1>
+      <p class="page-subtitle">RGPD (UE) 2016/679 · LOPDGDD 3/2018 — Información y consentimiento</p>
+    </div>
+    <div class="nav-arrows">
+      <button class="btn-arrow" onclick="go(0)" disabled>←</button>
+      <button class="btn-arrow" onclick="go(1)">→</button>
+    </div>
+  </div>
+
+  <div class="card accent-teal">
+    <div class="card-header"><div class="card-header-icon">🏥</div><span class="card-title">Datos del Responsable del Tratamiento</span></div>
+    <div class="card-body">
+      <div class="g3">
+        <div class="field"><label>Nombre / Razón social</label><input type="text" id="r-nombre" placeholder="Clínica / Fisioterapeuta" oninput="updateProg()"></div>
+        <div class="field"><label>NIF / CIF</label><input type="text" id="r-nif" placeholder="—"></div>
+        <div class="field"><label>Nº Colegiado</label><input type="text" id="r-col" placeholder="—"></div>
+        <div class="field full"><label>Dirección del centro</label><input type="text" id="r-dir" placeholder="Calle, número, ciudad, CP"></div>
+        <div class="field"><label>Teléfono</label><input type="text" id="r-tel" placeholder="+34 —"></div>
+        <div class="field"><label>Email</label><input type="text" id="r-email" placeholder="contacto@clinica.es"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-header-icon" style="background:var(--blue);color:#fff">👤</div><span class="card-title">Datos del Paciente / Interesado</span></div>
+    <div class="card-body">
+      <div class="g3">
+        <div class="field"><label>Nombre y apellidos</label><input type="text" id="p-nombre" placeholder="—" oninput="updateProg()"></div>
+        <div class="field"><label>DNI / NIE / Pasaporte</label><input type="text" id="p-dni" placeholder="—"></div>
+        <div class="field"><label>Fecha de nacimiento</label><input type="date" id="p-fnac"></div>
+        <div class="field"><label>Teléfono</label><input type="text" id="p-tel" placeholder="+34 —"></div>
+        <div class="field"><label>Email</label><input type="text" id="p-email" placeholder="—"></div>
+        <div class="field"><label>Representante legal (si aplica)</label><input type="text" id="p-rep" placeholder="Nombre + DNI"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-header-icon" style="background:#4c1d95;color:#fff">⚖️</div><span class="card-title">Información Art. 13 RGPD — Tratamiento de sus datos</span></div>
+    <div class="card-body">
+      <div class="rgpd-article">
+        <div class="art-title">Finalidad del tratamiento</div>
+        <p>Gestión de la historia clínica, prestación de servicios de fisioterapia, seguimiento terapéutico, facturación y comunicación con el paciente.</p>
+      </div>
+      <div class="rgpd-article">
+        <div class="art-title">Base jurídica</div>
+        <p>Ejecución de un contrato (Art. 6.1.b RGPD) y tratamiento necesario para la prestación de asistencia sanitaria (Art. 9.2.h RGPD), en el marco de la obligación de secreto profesional (Art. 9.3 RGPD).</p>
+      </div>
+      <div class="rgpd-article">
+        <div class="art-title">Categorías de datos tratados</div>
+        <p>Datos identificativos, datos de contacto y <strong>datos de salud</strong> (historia clínica, diagnósticos, tratamientos, pruebas complementarias) — categoría especial conforme al Art. 9 RGPD.</p>
+      </div>
+      <div class="rgpd-article">
+        <div class="art-title">Destinatarios</div>
+        <p>Sus datos no serán cedidos a terceros salvo obligación legal o, en su caso, a otros profesionales sanitarios implicados en su asistencia, con su consentimiento expreso. No se realizan transferencias internacionales.</p>
+      </div>
+      <div class="rgpd-article">
+        <div class="art-title">Plazo de conservación</div>
+        <p>Mínimo 5 años desde el alta (Ley 41/2002 de Autonomía del Paciente y normativa autonómica aplicable), o el plazo superior que exija la legislación sanitaria vigente.</p>
+      </div>
+
+      <div style="margin-top:16px">
+        <div class="art-title" style="font-family:var(--mono);font-size:9.5px;letter-spacing:0.8px;text-transform:uppercase;color:var(--teal-dark);font-weight:500;margin-bottom:10px">Sus derechos — puede ejercerlos en cualquier momento</div>
+        <div class="rights-grid">
+          <div class="right-item"><div class="right-letter">A</div><div class="right-name">Acceso</div></div>
+          <div class="right-item"><div class="right-letter">R</div><div class="right-name">Rectificación</div></div>
+          <div class="right-item"><div class="right-letter">S</div><div class="right-name">Supresión</div></div>
+          <div class="right-item"><div class="right-letter">L</div><div class="right-name">Limitación</div></div>
+          <div class="right-item"><div class="right-letter">U</div><div class="right-name">Portabilidad</div></div>
+          <div class="right-item"><div class="right-letter">O</div><div class="right-name">Oposición</div></div>
+          <div class="right-item" style="grid-column:span 2"><div class="right-letter">🔒</div><div class="right-name">Reclamación AEPD · www.aepd.es</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card accent-teal">
+    <div class="card-header"><div class="card-header-icon">✅</div><span class="card-title">Declaración de Consentimiento</span></div>
+    <div class="card-body">
+      <div class="consent-block" style="margin-bottom:16px">
+        D./Dña. <span class="blank"></span>, con DNI/NIE <span class="blank-sm"></span>,
+        en calidad de paciente (o representante legal de <span class="blank"></span>), declara haber sido informado/a
+        de forma comprensible sobre el tratamiento de sus datos personales y de salud.
+      </div>
+      <div class="checkbox-list">
+        <div class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox"><label><strong>CONSIENTO</strong> el tratamiento de mis datos de salud para la prestación de servicios de fisioterapia y la gestión de mi historia clínica. <em>(Obligatorio para iniciar el tratamiento)</em></label></div>
+        <div class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox"><label><strong>CONSIENTO / NO CONSIENTO</strong> que mis datos puedan ser utilizados con fines estadísticos o de investigación, siempre de forma <strong>anonimizada</strong>. <em>(Opcional)</em></label></div>
+        <div class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox"><label><strong>CONSIENTO / NO CONSIENTO</strong> el envío de comunicaciones sobre servicios, promociones o contenidos de salud de la clínica por vía electrónica. <em>(Opcional)</em></label></div>
+        <div class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox"><label>He recibido una <strong>copia de este documento</strong> y comprendo que puedo revocar mi consentimiento en cualquier momento.</label></div>
+      </div>
+      <div class="warn-note" style="margin-top:12px">⚠️ La revocación del consentimiento no afecta a la licitud del tratamiento realizado con anterioridad, ni a la conservación de datos exigida por obligación legal.</div>
+      <div class="g2" style="margin-top:8px">
+        <div class="field"><label>Lugar y fecha</label><input type="text" placeholder="Ciudad, DD/MM/AAAA"></div>
+        <div class="field"><label>Fecha de consulta</label><input type="date" id="fecha-consulta"></div>
+      </div>
+      <div class="signature-row">
+        <div class="signature-box">
+          <div class="signature-area"></div>
+          <div class="signature-label">Firma del paciente / representante legal</div>
+        </div>
+        <div class="signature-box">
+          <div class="signature-area"></div>
+          <div class="signature-label">Firma y sello del profesional / clínica</div>
+        </div>
+      </div>
+      <div class="info-note" style="margin-top:12px; font-size:11px">Conforme al RGPD (UE) 2016/679 del Parlamento Europeo y del Consejo, y la Ley Orgánica 3/2018, de 5 de diciembre, de Protección de Datos Personales y garantía de los derechos digitales (LOPDGDD).</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+  PANEL 1 — CONSENTIMIENTO TÉCNICAS INVASIVAS
+══════════════════════════════════════════════════════════════════════════ -->
+<div class="panel" id="p1">
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-number">02 · Legal</div>
+      <h1 class="page-title">Consentimiento <em>Invasivo</em></h1>
+      <p class="page-subtitle">Ley 41/2002 de Autonomía del Paciente · Información y consentimiento informado</p>
+    </div>
+    <div class="nav-arrows">
+      <button class="btn-arrow" onclick="go(0)">←</button>
+      <button class="btn-arrow" onclick="go(2)">→</button>
+    </div>
+  </div>
+
+  <div class="card accent-red">
+    <div class="card-header"><div class="card-header-icon">🩺</div><span class="card-title">Técnica Invasiva Propuesta</span></div>
+    <div class="card-body">
+      <p style="font-size:12px;color:var(--ink-soft);margin-bottom:14px">Marque la/s técnica/s propuesta/s y complete los datos del paciente y profesional.</p>
+      <div class="g2" style="margin-bottom:14px">
+        <div class="field"><label>Nombre y apellidos del paciente</label><input type="text" placeholder="—" oninput="updateProg()"></div>
+        <div class="field"><label>DNI / NIE del paciente</label><input type="text" placeholder="—"></div>
+        <div class="field"><label>Nombre del fisioterapeuta</label><input type="text" placeholder="—"></div>
+        <div class="field"><label>Nº de Colegiado</label><input type="text" placeholder="—"></div>
+        <div class="field"><label>Zona / región anatómica de aplicación</label><input type="text" placeholder="ej. Musculatura paravertebral lumbar..."></div>
+        <div class="field"><label>Diagnóstico / Indicación</label><input type="text" placeholder="ej. Tendinopatía rotuliana crónica..."></div>
+      </div>
+
+      <div style="margin-bottom:8px;font-family:var(--mono);font-size:9.5px;letter-spacing:0.8px;text-transform:uppercase;color:var(--ink-soft)">Seleccionar técnica(s):</div>
+      <div class="checkbox-list">
+        <div class="checkbox-item" onclick="toggleCheck(this)">
+          <input type="checkbox">
+          <label><strong>Punción Seca (PS)</strong> — Inserción de agujas de acupuntura, sin fármacos, en puntos gatillo miofasciales o tejido neural para reducir dolor y mejorar función muscular.</label>
+        </div>
+        <div class="checkbox-item" onclick="toggleCheck(this)">
+          <input type="checkbox">
+          <label><strong>Electrólisis Percutánea Intratisular (EPI® / EPTE®)</strong> — Punción con corriente galvánica para estimular la reparación de tejidos crónicamente degenerados (tendinopatías, fasciopatías).</label>
+        </div>
+        <div class="checkbox-item" onclick="toggleCheck(this)">
+          <input type="checkbox">
+          <label><strong>Acupuntura Terapéutica</strong> — Inserción de agujas en puntos específicos del sistema nervioso periférico con finalidad analgésica y reguladora.</label>
+        </div>
+        <div class="checkbox-item" onclick="toggleCheck(this)">
+          <input type="checkbox">
+          <label><strong>Neuromodulación Percutánea (NMP)</strong> — Punción selectiva de nervios periféricos con aplicación de corriente eléctrica para modular la transmisión del dolor.</label>
+        </div>
+      </div>
+      <div class="field" style="margin-top:10px"><label>Otra técnica (especificar)</label><input type="text" placeholder="—"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-header-icon" style="background:var(--green);color:#fff">✅</div><span class="card-title">Beneficios Esperados</span></div>
+    <div class="card-body">
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div class="risk-item green">Reducción del dolor (efecto analgésico local y central)</div>
+        <div class="risk-item green">Mejora del rango articular y la función muscular</div>
+        <div class="risk-item green">Estímulo de la regeneración tisular en lesiones crónicas</div>
+        <div class="risk-item green">Disminución de la hiperactividad del punto gatillo miofascial</div>
+        <div class="risk-item green">Potenciación del proceso natural de recuperación</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card accent-amber">
+    <div class="card-header"><div class="card-header-icon">⚠️</div><span class="card-title">Riesgos y Contraindicaciones</span></div>
+    <div class="card-body">
+      <div class="risk-row">
+        <div>
+          <div class="risk-col-header amber">Riesgos frecuentes</div>
+          <div class="risk-item amber">Dolor post-punción sordo y profundo (24–72 h)</div>
+          <div class="risk-item amber">Hematoma o equimosis en zona de punción</div>
+          <div class="risk-item amber">Sangrado leve en el punto de inserción</div>
+          <div class="risk-item amber">Sensación de calor o pesadez local</div>
+          <div class="risk-item amber">Fatiga o cansancio muscular transitorio</div>
+          <div class="risk-item amber">Mareo o síncope vasovagal</div>
+        </div>
+        <div>
+          <div class="risk-col-header red">Riesgos poco frecuentes / graves</div>
+          <div class="risk-item red">Infección local (minimizado con agujas estériles de un solo uso)</div>
+          <div class="risk-item red">Neumotórax (punción torácica: escalenos, intercostales)</div>
+          <div class="risk-item red">Lesión nerviosa o vascular inadvertida</div>
+          <div class="risk-item red">Reacción alérgica al material (acero inoxidable)</div>
+          <div class="risk-item red">Agravamiento transitorio de síntomas</div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px;font-family:var(--mono);font-size:9.5px;letter-spacing:0.8px;text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px">Contraindicaciones — el paciente declara NO presentar las siguientes condiciones:</div>
+      <div class="flags-grid">
+        <div class="flag-item" onclick="toggleFlagRed(this)"><input type="checkbox"><label>Trastorno de coagulación / anticoagulación</label><span class="flag-badge badge-red">CI</span></div>
+        <div class="flag-item" onclick="toggleFlagRed(this)"><input type="checkbox"><label>Embarazo (zona lumbar / abdomen / sacro)</label><span class="flag-badge badge-red">CI</span></div>
+        <div class="flag-item" onclick="toggleFlagRed(this)"><input type="checkbox"><label>Marcapasos o dispositivos implantados (EPI/NMP)</label><span class="flag-badge badge-red">CI</span></div>
+        <div class="flag-item" onclick="toggleFlagRed(this)"><input type="checkbox"><label>Infección activa o celulitis en zona de punción</label><span class="flag-badge badge-red">CI</span></div>
+        <div class="flag-item" onclick="toggleFlagRed(this)"><input type="checkbox"><label>Neoplasia activa en la zona de tratamiento</label><span class="flag-badge badge-red">CI</span></div>
+        <div class="flag-item" onclick="toggleFlagRed(this)"><input type="checkbox"><label>Implantes metálicos en zona de punción</label><span class="flag-badge badge-red">CI</span></div>
+        <div class="flag-item" onclick="toggleFlagRed(this)"><input type="checkbox"><label>Inmunosupresión severa</label><span class="flag-badge badge-red">CI</span></div>
+        <div class="flag-item" onclick="toggleFlagRed(this)"><input type="checkbox"><label>Belonefobia severa / fobia a las agujas</label><span class="flag-badge badge-red">CI</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-header-icon" style="background:var(--ink-soft);color:#fff">🔄</div><span class="card-title">Alternativas Terapéuticas No Invasivas</span></div>
+    <div class="card-body">
+      <p style="font-size:13px;color:var(--ink-mid);line-height:1.6">El paciente ha sido informado de que existen alternativas terapéuticas no invasivas para el abordaje de su condición, incluyendo: <strong>terapia manual, ejercicio terapéutico, electroterapia no invasiva, termoterapia/crioterapia y educación en neurociencia del dolor</strong>. El paciente puede rechazar la técnica invasiva propuesta y optar por cualquier alternativa disponible sin que ello afecte a la calidad de su asistencia.</p>
+    </div>
+  </div>
+
+  <div class="card accent-teal">
+    <div class="card-header"><div class="card-header-icon">✍️</div><span class="card-title">Declaración de Consentimiento Informado</span></div>
+    <div class="card-body">
+      <div class="consent-block" style="margin-bottom:16px">
+        D./Dña. <span class="blank"></span>, con DNI/NIE <span class="blank-sm"></span>,
+        declara que el/la fisioterapeuta le ha explicado verbalmente el procedimiento, su duración, el número estimado de sesiones
+        y ha respondido satisfactoriamente a todas sus preguntas.
+      </div>
+      <div class="checkbox-list">
+        <div class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox"><label>He sido informado/a de forma comprensible sobre la naturaleza, objetivos, beneficios, riesgos y contraindicaciones de la/s técnica/s propuesta/s.</label></div>
+        <div class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox"><label>He tenido la oportunidad de formular preguntas y las he recibido con respuestas satisfactorias.</label></div>
+        <div class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox"><label><strong>OTORGO MI CONSENTIMIENTO LIBRE, VOLUNTARIO E INFORMADO</strong> para la realización de la técnica indicada, pudiendo revocarlo en cualquier momento antes de su inicio sin necesidad de justificación.</label></div>
+        <div class="checkbox-item" onclick="toggleCheck(this)"><input type="checkbox"><label>He recibido una copia del presente documento.</label></div>
+      </div>
+      <div class="g2" style="margin-top:12px">
+        <div class="field"><label>Lugar y fecha</label><input type="text" placeholder="Ciudad, DD/MM/AAAA"></div>
+        <div class="field"><label>Fecha prevista de tratamiento</label><input type="date"></div>
+      </div>
+      <div class="signature-row">
+        <div class="signature-box">
+          <div class="signature-area"></div>
+          <div class="signature-label">Firma del paciente / representante legal</div>
+        </div>
+        <div class="signature-box">
+          <div class="signature-area"></div>
+          <div class="signature-label">Firma y sello del fisioterapeuta</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="border-color:var(--border-strong)">
+    <div class="card-header"><div class="card-header-icon" style="background:var(--ink-mid);color:#fff">↩️</div><span class="card-title">Revocación del Consentimiento (cumplimentar sólo si procede)</span></div>
+    <div class="card-body">
+      <div class="consent-block" style="background:var(--bg-warm)">
+        D./Dña. <span class="blank"></span>, con DNI/NIE <span class="blank-sm"></span>,
+        <strong>REVOCO</strong> el consentimiento otorgado en fecha <span class="blank-sm"></span> para la realización de <span class="blank"></span>.
+      </div>
+      <div class="g2" style="margin-top:12px">
+        <div class="field"><label>Fecha de revocación</label><input type="date"></div>
+        <div class="field"><label>Motivo (opcional)</label><input type="text" placeholder="—"></div>
+      </div>
+      <div class="signature-row">
+        <div class="signature-box">
+          <div class="signature-area"></div>
+          <div class="signature-label">Firma del paciente</div>
+        </div>
+        <div class="signature-box">
+          <div class="signature-area"></div>
+          <div class="signature-label">Firma del fisioterapeuta</div>
+        </div>
+      </div>
+      <div class="info-note" style="font-size:11px">Conforme a la Ley 41/2002, de 14 de noviembre, Básica Reguladora de la Autonomía del Paciente y de los Derechos y Obligaciones en materia de Información y Documentación Clínica.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+  PANEL 2 — DATOS & HISTORIA CLÍNICA
+══════════════════════════════════════════════════════════════════════════ -->
+<div class="panel" id="p2">
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-number">03 · Anamnesis</div>
+      <h1 class="page-title">Datos & <em>Historia</em></h1>
+      <p class="page-subtitle">Datos personales, antecedentes médicos y fisioterapéuticos</p>
+    </div>
+    <div class="nav-arrows">
+      <button class="btn-arrow" onclick="go(1)">←</button>
+      <button class="btn-arrow" onclick="go(3)">→</button>
+    </div>
+  </div>
+
+  <div class="card accent-blue">
+    <div class="card-header"><div class="card-header-icon">🪪</div><span class="card-title">Identificación del Paciente</span></div>
+    <div class="card-body">
+      <div class="g3">
+        <div class="field"><label>Nombre y apellidos</label><input type="text" id="pac-nombre" placeholder="—" oninput="updateProg()"></div>
+        <div class="field"><label>Fecha de nacimiento</label><input type="date" id="pac-fnac"></div>
+        <div class="field"><label>Edad</label><input type="number" id="pac-edad" placeholder="años" min="0" max="120"></div>
+        <div class="field"><label>Sexo</label><select id="pac-sexo"><option value="">—</option><option>Hombre</option><option>Mujer</option><option>No binario / Otro</option></select></div>
+        <div class="field"><label>Profesión / Actividad</label><input type="text" placeholder="ej. Oficinista, Atleta..."></div>
+        <div class="field"><label>Nivel de actividad física</label><select><option value="">—</option><option>Sedentario</option><option>Leve (1–2 días/sem)</option><option>Moderado (3–4 días/sem)</option><option>Activo (5+ días/sem)</option><option>Deportista de élite</option></select></div>
+        <div class="field"><label>Fisioterapeuta</label><input type="text" placeholder="—"></div>
+        <div class="field"><label>Fecha de consulta</label><input type="date" id="f-consulta"></div>
+        <div class="field"><label>Nº Historia</label><input type="text" placeholder="—"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-header-icon" style="background:#7c3aed;color:#fff">🏥</div><span class="card-title">Antecedentes Médicos</span></div>
+    <div class="card-body">
+      <div class="g2">
+        <div class="field"><label>Patologías previas</label><textarea placeholder="ej. HTA, DM tipo 2, artrosis..."></textarea></div>
+        <div class="field"><label>Intervenciones quirúrgicas</label><textarea placeholder="ej. Meniscectomía derecha 2018..."></textarea></div>
+        <div class="field"><label>Medicación actual</label><textarea placeholder="ej. Ibuprofeno 600mg, Omeprazol..."></textarea></div>
+        <div class="field"><label>Alergias</label><textarea placeholder="ej. Látex, AINEs, Penicilina..."></textarea></div>
+        <div class="field"><label>Médico derivador / Diagnóstico médico</label><input type="text" placeholder="—" style="margin-bottom:8px"><input type="text" placeholder="Diagnóstico médico..."></div>
+        <div class="field"><label>Pruebas complementarias</label><textarea placeholder="RMN, ECO, Rx, analítica... y sus resultados relevantes"></textarea></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card accent-teal">
+    <div class="card-header"><div class="card-header-icon">🩹</div><span class="card-title">Antecedentes Fisioterapéuticos</span></div>
+    <div class="card-body">
+      <div class="g2">
+        <div class="field"><label>Tratamientos previos de fisioterapia</label><textarea placeholder="ej. Tratamiento lumbar 2022 con mejoría parcial..."></textarea></div>
+        <div class="field">
+          <label>Resultado de tratamientos anteriores</label>
+          <div class="chips" style="margin-bottom:8px" id="chips-resultado">
+            <div class="chip" onclick="toggleChip(this)">Mejoría completa</div>
+            <div class="chip" onclick="toggleChip(this)">Mejoría parcial</div>
+            <div class="chip" onclick="toggleChip(this)">Sin cambios</div>
+            <div class="chip" onclick="toggleChip(this)">Empeoramiento</div>
+            <div class="chip" onclick="toggleChip(this)">Recidiva</div>
+          </div>
+          <textarea placeholder="Comentarios adicionales..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reasoning-panel">
+    <div class="rp-head">⚡ Razonamiento clínico inicial</div>
+    <ul>
+      <li>Relaciona la profesión con posibles sobrecargas posturales o patrones de movimiento repetitivo.</li>
+      <li>La medicación analgésica puede enmascarar la intensidad real del dolor → revalorar sin medicación si es posible.</li>
+      <li>Los resultados de tratamientos previos orientan el pronóstico y la adherencia terapéutica esperada.</li>
+      <li>Las pruebas de imagen no siempre correlacionan con la clínica. Prioriza siempre la exploración física.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+  PANEL 3 — MOTIVO DE CONSULTA
+══════════════════════════════════════════════════════════════════════════ -->
+<div class="panel" id="p3">
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-number">04 · Anamnesis</div>
+      <h1 class="page-title">Motivo de <em>Consulta</em></h1>
+      <p class="page-subtitle">Queja principal, mecanismo lesional y banderas de alerta</p>
+    </div>
+    <div class="nav-arrows">
+      <button class="btn-arrow" onclick="go(2)">←</button>
+      <button class="btn-arrow" onclick="go(4)">→</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-header-icon" style="background:var(--ink);color:#fff">💬</div><span class="card-title">Queja Principal — en palabras del paciente</span></div>
+    <div class="card-body">
+      <div class="field"><textarea style="min-height:90px" placeholder="Escribe aquí exactamente lo que refiere el paciente..." oninput="updateProg()"></textarea></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-header-icon" style="background:var(--blue);color:#fff">⚙️</div><span class="card-title">Mecanismo Lesional & Evolución</span></div>
+    <div class="card-body">
+      <div style="margin-bottom:14px">
+        <label style="font-family:var(--mono);font-size:9.5px;letter-spacing:0.8px;text-transform:uppercase;color:var(--ink-soft);display:block;margin-bottom:8px">Mecanismo</label>
+        <div class="chips" id="chips-mec">
+          <div class="chip" onclick="toggleChip(this)">Traumático directo</div>
+          <div class="chip" onclick="toggleChip(this)">Traumático indirecto</div>
+          <div class="chip" onclick="toggleChip(this)">Sobrecarga gradual</div>
+          <div class="chip" onclick="toggleChip(this)">Postural / ergonómico</div>
+          <div class="chip" onclick="toggleChip(this)">Esfuerzo puntual</div>
+          <div class="chip" onclick="toggleChip(this)">Gesto deportivo</div>
+          <div class="chip" onclick="toggleChip(this)">Post-quirúrgico</div>
+          <div class="chip" onclick="toggleChip(this)">Sin causa aparente</div>
+        </div>
+      </div>
+      <div class="g2">
+        <div class="field"><label>Descripción del mecanismo</label><textarea placeholder="ej. Giro brusco de rodilla corriendo..."></textarea></div>
+        <div>
+          <div class="field" style="margin-bottom:8px"><label>Fecha de inicio</label><input type="date"></div>
+          <div class="field"><label>Tiempo de evolución</label><select><option value="">—</option><option>Agudo (&lt;2 semanas)</option><option>Subagudo (2–12 semanas)</option><option>Crónico (&gt;12 semanas)</option><option>Crónico reagudizado</option></select></div>
+        </div>
+        <div class="field"><label>Influencia en AVD / Trabajo / Deporte</label><textarea placeholder="ej. No puede subir escaleras, limitado en el trabajo..."></textarea></div>
+        <div class="field"><label>Sueño — cantidad y calidad</label><textarea placeholder="ej. Despierta por dolor a las 3h, 5h/noche..."></textarea></div>
+        <div class="field"><label>Kinesofobia / Miedo al movimiento</label><select><option value="">— TSK-11 o valoración clínica —</option><option>Sin kinesofobia</option><option>Leve</option><option>Moderada</option><option>Severa</option></select></div>
+        <div class="field"><label>Pruebas complementarias</label><input type="text" placeholder="RMN, ECO, Rx..."></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card accent-red">
+    <div class="card-header"><div class="card-header-icon">🚩</div><span class="card-title">Banderas de Alerta</span></div>
+    <div class="card-body">
+      <p style="font-size:12px;color:var(--ink-soft);margin-bottom:14px">Las banderas <strong>rojas</strong> requieren derivación médica urgente. Las <strong>amarillas</strong> son factores psicosociales que modulan el pronóstico.</p>
+      <div class="g2" style="gap:16px">
+        <div>
+          <div style="font-family:var(--mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--red);margin-bottom:8px;padding:6px 10px;background:var(--red-light);border-radius:5px;border:1px solid #fca5a5">🔴 Banderas Rojas — derivación urgente</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div class="flag-item" onclick="toggleFlagRed(this)"><input type="checkbox"><label>Pérdida de peso inexplicada (&gt;5 kg)</label><span class="flag-badge badge-red">R</span></div>
+            <div class="flag-item" onclick="toggleFlagRed(this)"><input type="checkbox"><label>Fiebre o sudoración nocturna</label><span class="flag-badge badge-red">R</span></div>
+            <div class="flag-item" onclick="toggleFlagRed(this)"><input type="checkbox"><label>Historia de neoplasia</label><span class="flag-badge badge-red">R</span></div>
+            <div class="flag-item" onclick="toggleFlagRed(this)"><input type="checkbox"><label>Déficit neurológico progresivo</label><span class="flag-badge badge-red">R</span></div>
+            <div class="flag-item" onclick="toggleFlagRed(this)"><input type="checkbox"><label>Disfunción esfínteriana</label><span class="flag-badge badge-red">R</span></div>
+            <div class="flag-item" onclick="toggleFlagRed(this)"><input type="checkbox"><label>Dolor no mecánico (no cede en reposo)</label><span class="flag-badge badge-red">R</span></div>
+            <div class="flag-item" onclick="toggleFlagRed(this)"><input type="checkbox"><label>Trauma vertebral reciente</label><span class="flag-badge badge-red">R</span></div>
+          </div>
+        </div>
+        <div>
+          <div style="font-family:var(--mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--amber);margin-bottom:8px;padding:6px 10px;background:var(--amber-light);border-radius:5px;border:1px solid #fcd34d">🟡 Banderas Amarillas — factores psicosociales</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div class="flag-item" onclick="toggleFlagYellow(this)"><input type="checkbox"><label>Catastrofismo del dolor</label><span class="flag-badge badge-yellow">A</span></div>
+            <div class="flag-item" onclick="toggleFlagYellow(this)"><input type="checkbox"><label>Baja laboral prolongada</label><span class="flag-badge badge-yellow">A</span></div>
+            <div class="flag-item" onclick="toggleFlagYellow(this)"><input type="checkbox"><label>Pasividad / dependencia del tratamiento</label><span class="flag-badge badge-yellow">A</span></div>
+            <div class="flag-item" onclick="toggleFlagYellow(this)"><input type="checkbox"><label>Insatisfacción laboral</label><span class="flag-badge badge-yellow">A</span></div>
+            <div class="flag-item" onclick="toggleFlagYellow(this)"><input type="checkbox"><label>Ansiedad o depresión asociada</label><span class="flag-badge badge-yellow">A</span></div>
+            <div class="flag-item" onclick="toggleFlagYellow(this)"><input type="checkbox"><label>Kinesofobia elevada (TSK-11 &gt;37)</label><span class="flag-badge badge-yellow">A</span></div>
+            <div class="flag-item" onclick="toggleFlagYellow(this)"><input type="checkbox"><label>Expectativas negativas de recuperación</label><span class="flag-badge badge-yellow">A</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+  PANEL 4 — ANÁLISIS DEL DOLOR
+══════════════════════════════════════════════════════════════════════════ -->
+<div class="panel" id="p4">
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-number">05 · Anamnesis</div>
+      <h1 class="page-title">Análisis del <em>Dolor</em></h1>
+      <p class="page-subtitle">Caracterización completa · EVA · Mecanismo · Clasificación</p>
+    </div>
+    <div class="nav-arrows">
+      <button class="btn-arrow" onclick="go(3)">←</button>
+      <button class="btn-arrow" onclick="go(5)">→</button>
+    </div>
+  </div>
+
+  <div class="card accent-teal">
+    <div class="card-header"><div class="card-header-icon">📊</div><span class="card-title">Intensidad del Dolor — EVA / NRS</span></div>
+    <div class="card-body">
+      <div class="vas-grid">
+        <div class="field">
+          <label>Dolor en reposo</label>
+          <div class="vas-wrap">
+            <div class="vas-labels"><span>0 — Sin dolor</span><span>10 — Máximo</span></div>
+            <div class="vas-row">
+              <input type="range" min="0" max="10" value="0" oninput="document.getElementById('v0').textContent=this.value;updateProg()">
+              <div class="vas-val" id="v0">0</div>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Dolor en movimiento / actividad</label>
+          <div class="vas-wrap">
+            <div class="vas-labels"><span>0</span><span>10</span></div>
+            <div class="vas-row">
+              <input type="range" min="0" max="10" value="0" oninput="document.getElementById('v1').textContent=this.value">
+              <div class="vas-val" id="v1">0</div>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Peor dolor últimas 24 h</label>
+          <div class="vas-wrap">
+            <div class="vas-labels"><span>0</span><span>10</span></div>
+            <div class="vas-row">
+              <input type="range" min="0" max="10" value="0" oninput="document.getElementById('v2').textContent=this.value">
+              <div class="vas-val" id="v2">0</div>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Mejor dolor últimas 24 h</label>
+          <div class="vas-wrap">
+            <div class="vas-labels"><span>0</span><span>10</span></div>
+            <div class="vas-row">
+              <input type="range" min="0" max="10" value="0" oninput="document.getElementById('v3').textContent=this.value">
+              <div class="vas-val" id="v3">0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-header-icon" style="background:var(--amber);color:#fff">🔍</div><span class="card-title">Características del Dolor</span></div>
+    <div class="card-body">
+      <div class="g2" style="gap:16px">
+        <div>
+          <label style="font-family:var(--mono);font-size:9.5px;letter-spacing:0.8px;text-transform:uppercase;color:var(--ink-soft);display:block;margin-bottom:8px">Tipo / Cualidad</label>
+          <div class="chips" id="chips-tipo">
+            <div class="chip" onclick="toggleChip(this)">Agudo / punzante</div>
+            <div class="chip" onclick="toggleChip(this)">Sordo / profundo</div>
+            <div class="chip" onclick="toggleChip(this)">Quemante</div>
+            <div class="chip" onclick="toggleChip(this)">Pulsátil</div>
+            <div class="chip" onclick="toggleChip(this)">Eléctrico / irradiado</div>
+            <div class="chip" onclick="toggleChip(this)">Opresivo</div>
+            <div class="chip" onclick="toggleChip(this)">Hormigueo / parestesias</div>
+            <div class="chip" onclick="toggleChip(this)">Entumecimiento</div>
+          </div>
+        </div>
+        <div>
+          <label style="font-family:var(--mono);font-size:9.5px;letter-spacing:0.8px;text-transform:uppercase;color:var(--ink-soft);display:block;margin-bottom:8px">Comportamiento temporal</label>
+          <div class="chips" id="chips-temp">
+            <div class="chip" onclick="toggleChip(this)">Constante</div>
+            <div class="chip" onclick="toggleChip(this)">Intermitente</div>
+            <div class="chip" onclick="toggleChip(this)">Matutino (rigidez &gt;30 min)</div>
+            <div class="chip" onclick="toggleChip(this)">Nocturno</div>
+            <div class="chip" onclick="toggleChip(this)">Con actividad</div>
+            <div class="chip" onclick="toggleChip(this)">Al final del día</div>
+          </div>
+        </div>
+        <div>
+          <label style="font-family:var(--mono);font-size:9.5px;letter-spacing:0.8px;text-transform:uppercase;color:var(--ink-soft);display:block;margin-bottom:8px">Factores que alivian</label>
+          <div class="chips" id="chips-alivia" style="margin-bottom:8px">
+            <div class="chip" onclick="toggleChip(this)">Reposo</div>
+            <div class="chip" onclick="toggleChip(this)">Calor</div>
+            <div class="chip" onclick="toggleChip(this)">Frío</div>
+            <div class="chip" onclick="toggleChip(this)">Movimiento</div>
+            <div class="chip" onclick="toggleChip(this)">Analgésicos</div>
+            <div class="chip" onclick="toggleChip(this)">Decúbito</div>
+            <div class="chip" onclick="toggleChip(this)">Posición antálgica</div>
+          </div>
+          <input type="text" style="font-family:var(--sans);font-size:13px;padding:7px 10px;border:1.5px solid var(--border);border-radius:6px;width:100%;outline:none" placeholder="Otro...">
+        </div>
+        <div>
+          <label style="font-family:var(--mono);font-size:9.5px;letter-spacing:0.8px;text-transform:uppercase;color:var(--ink-soft);display:block;margin-bottom:8px">Factores que empeoran</label>
+          <div class="chips" id="chips-empeora" style="margin-bottom:8px">
+            <div class="chip" onclick="toggleChip(this)">Movimiento</div>
+            <div class="chip" onclick="toggleChip(this)">Reposo prolongado</div>
+            <div class="chip" onclick="toggleChip(this)">Bipedestación</div>
+            <div class="chip" onclick="toggleChip(this)">Sedestación</div>
+            <div class="chip" onclick="toggleChip(this)">Carga / esfuerzo</div>
+            <div class="chip" onclick="toggleChip(this)">Frío / humedad</div>
+            <div class="chip" onclick="toggleChip(this)">Estrés</div>
+            <div class="chip" onclick="toggleChip(this)">Noche</div>
+          </div>
+          <input type="text" style="font-family:var(--sans);font-size:13px;padding:7px 10px;border:1.5px solid var(--border);border-radius:6px;width:100%;outline:none" placeholder="Otro...">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card accent-blue">
+    <div class="card-header"><div class="card-header-icon">🧬</div><span class="card-title">Clasificación del Dolor — Razonamiento</span></div>
+    <div class="card-body">
+      <div class="g3">
+        <div class="field"><label>Mecanismo predominante</label>
+          <select>
+            <option value="">— Seleccionar —</option>
+            <option>Nociceptivo musculoesquelético</option>
+            <option>Nociceptivo inflamatorio</option>
+            <option>Neuropático periférico</option>
+            <option>Neuropático central</option>
+            <option>Nociplástico / Sensibilización central</option>
+            <option>Mixto</option>
+          </select>
+        </div>
+        <div class="field"><label>Patrón</label>
+          <select>
+            <option value="">—</option>
+            <option>Mecánico</option>
+            <option>Inflamatorio</option>
+            <option>Neuropático</option>
+          </select>
+        </div>
+        <div class="field"><label>Nivel de irritabilidad</label>
+          <select>
+            <option value="">—</option>
+            <option>Alta irritabilidad</option>
+            <option>Irritabilidad media</option>
+            <option>Baja irritabilidad</option>
+          </select>
+        </div>
+      </div>
+      <div class="info-note">
+        <strong>🧠 Clave clínica:</strong> Patrón <em>inflamatorio</em> → rigidez matutina &gt;30 min, mejora con movimiento · Patrón <em>mecánico</em> → mejora con reposo, empeora con carga · <em>Alta irritabilidad</em> → precaución extrema en la exploración activa y pasiva.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+  PANEL 5 — BODY CHART
+══════════════════════════════════════════════════════════════════════════ -->
+<div class="panel" id="p5">
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-number">06 · Anamnesis</div>
+      <h1 class="page-title">Body <em>Chart</em></h1>
+      <p class="page-subtitle">Haz clic en las figuras para marcar zonas de síntomas</p>
+    </div>
+    <div class="nav-arrows">
+      <button class="btn-arrow" onclick="go(4)">←</button>
+      <button class="btn-arrow" onclick="go(6)">→</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-header-icon" style="background:var(--ink);color:#fff">🎨</div><span class="card-title">Herramientas de marcado</span></div>
+    <div class="card-body">
+      <div class="chart-tools-row">
+        <button class="tool-btn active" id="tb-dolor" onclick="setTool('dolor','#dc2626',this)"><span class="dot-preview" style="background:#dc2626"></span>Dolor local</button>
+        <button class="tool-btn" id="tb-irradiado" onclick="setTool('irradiado','#ea580c',this)"><span class="dot-preview" style="background:#ea580c"></span>Irradiado</button>
+        <button class="tool-btn" id="tb-parestesia" onclick="setTool('parestesia','#d97706',this)"><span class="dot-preview" style="background:#d97706"></span>Parestesia</button>
+        <button class="tool-btn" id="tb-hipoestesia" onclick="setTool('hipoestesia','#2563eb',this)"><span class="dot-preview" style="background:#2563eb"></span>Hipoestesia</button>
+        <button class="tool-btn" id="tb-rigidez" onclick="setTool('rigidez','#7c3aed',this)"><span class="dot-preview" style="background:#7c3aed"></span>Rigidez</button>
+        <button class="tool-btn" id="tb-eraser" onclick="setTool('eraser',null,this)" style="margin-left:auto">✕ Borrar punto</button>
+        <button class="tool-btn" onclick="clearChart()" style="color:var(--red)">🗑 Limpiar todo</button>
+      </div>
+      <div class="chart-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#dc2626"></div>Dolor local</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#ea580c"></div>Irradiado</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div>Parestesia</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#2563eb"></div>Hipoestesia</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#7c3aed"></div>Rigidez</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="body-chart-wrap">
+        <div class="body-figure">
+          <h5>Vista Anterior</h5>
+          <div class="body-canvas-wrap" id="bc-ant" onclick="addDot(event,'bc-ant')">
+            <svg viewBox="0 0 120 280" xmlns="http://www.w3.org/2000/svg" style="pointer-events:none;display:block">
+              <ellipse cx="60" cy="22" rx="16" ry="20" fill="#e8d5c0" stroke="#c4a882" stroke-width="1.2"/>
+              <rect x="53" y="40" width="14" height="12" rx="2" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <path d="M30 52 Q25 55 24 80 L22 130 Q22 135 30 136 L90 136 Q98 135 98 130 L96 80 Q95 55 90 52 Z" fill="#e8d5c0" stroke="#c4a882" stroke-width="1.2"/>
+              <ellipse cx="22" cy="60" rx="12" ry="8" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <ellipse cx="98" cy="60" rx="12" ry="8" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <path d="M12 60 Q6 80 8 110 L14 110 Q18 80 22 62 Z" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <path d="M108 60 Q114 80 112 110 L106 110 Q102 80 98 62 Z" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <path d="M8 110 Q5 130 7 150 L14 150 Q15 130 14 110 Z" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <path d="M112 110 Q115 130 113 150 L106 150 Q105 130 106 110 Z" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <ellipse cx="10" cy="158" rx="8" ry="10" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <ellipse cx="110" cy="158" rx="8" ry="10" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <path d="M30 136 L90 136 Q96 150 92 165 L28 165 Q24 150 30 136 Z" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <path d="M28 165 Q22 185 24 215 L40 215 Q42 185 40 165 Z" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <path d="M80 165 Q78 185 80 215 L96 215 Q98 185 92 165 Z" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <ellipse cx="32" cy="218" rx="9" ry="7" fill="#ddc8a8" stroke="#c4a882" stroke-width="1"/>
+              <ellipse cx="88" cy="218" rx="9" ry="7" fill="#ddc8a8" stroke="#c4a882" stroke-width="1"/>
+              <path d="M24 222 Q22 248 24 265 L40 265 Q42 248 40 222 Z" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <path d="M80 222 Q78 248 80 265 L96 265 Q98 248 98 222 Z" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <path d="M22 265 Q18 272 20 276 L44 276 Q46 270 40 265 Z" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <path d="M80 265 Q78 270 80 276 L100 276 Q102 272 98 265 Z" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <line x1="60" y1="52" x2="60" y2="136" stroke="#c4a882" stroke-width="0.5" stroke-dasharray="3,3" opacity="0.5"/>
+            </svg>
+          </div>
+        </div>
+        <div class="body-figure">
+          <h5>Vista Posterior</h5>
+          <div class="body-canvas-wrap" id="bc-post" onclick="addDot(event,'bc-post')">
+            <svg viewBox="0 0 120 280" xmlns="http://www.w3.org/2000/svg" style="pointer-events:none;display:block">
+              <ellipse cx="60" cy="22" rx="16" ry="20" fill="#e8d5c0" stroke="#c4a882" stroke-width="1.2"/>
+              <rect x="53" y="40" width="14" height="12" rx="2" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <path d="M30 52 Q25 55 24 80 L22 130 Q22 135 30 136 L90 136 Q98 135 98 130 L96 80 Q95 55 90 52 Z" fill="#e8d5c0" stroke="#c4a882" stroke-width="1.2"/>
+              <ellipse cx="22" cy="60" rx="12" ry="8" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <ellipse cx="98" cy="60" rx="12" ry="8" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <path d="M12 60 Q6 80 8 110 L14 110 Q18 80 22 62 Z" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <path d="M108 60 Q114 80 112 110 L106 110 Q102 80 98 62 Z" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <path d="M8 110 Q5 130 7 150 L14 150 Q15 130 14 110 Z" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <path d="M112 110 Q115 130 113 150 L106 150 Q105 130 106 110 Z" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <ellipse cx="10" cy="158" rx="8" ry="10" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <ellipse cx="110" cy="158" rx="8" ry="10" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <path d="M30 136 L90 136 Q96 150 92 165 L28 165 Q24 150 30 136 Z" fill="#ddc8a8" stroke="#c4a882" stroke-width="1"/>
+              <path d="M32 68 Q28 78 32 88 Q38 92 44 86 Q44 76 38 68 Z" fill="none" stroke="#c4a882" stroke-width="1.2"/>
+              <path d="M88 68 Q84 76 84 86 Q90 92 96 88 Q100 78 96 68 Z" fill="none" stroke="#c4a882" stroke-width="1.2"/>
+              <line x1="60" y1="52" x2="60" y2="136" stroke="#c4a882" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>
+              <path d="M28 165 Q22 185 24 215 L40 215 Q42 185 40 165 Z" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <path d="M80 165 Q78 185 80 215 L96 215 Q98 185 92 165 Z" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <ellipse cx="32" cy="218" rx="9" ry="7" fill="#ddc8a8" stroke="#c4a882" stroke-width="1"/>
+              <ellipse cx="88" cy="218" rx="9" ry="7" fill="#ddc8a8" stroke="#c4a882" stroke-width="1"/>
+              <path d="M24 222 Q22 248 24 265 L40 265 Q42 248 40 222 Z" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <path d="M80 222 Q78 248 80 265 L96 265 Q98 248 98 222 Z" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <path d="M24 265 Q20 272 22 276 L44 276 Q44 270 40 265 Z" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+              <path d="M80 265 Q80 270 80 276 L100 276 Q100 272 96 265 Z" fill="#e8d5c0" stroke="#c4a882" stroke-width="1"/>
+            </svg>
+          </div>
+        </div>
+        <div>
+          <h5 style="font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--ink-soft);margin-bottom:8px">Descripción de síntomas por zona</h5>
+          <div class="field" style="margin-bottom:12px">
+            <textarea style="min-height:180px" placeholder="Describe los síntomas por cada zona marcada:&#10;&#10;Zona 1 — [tipo, intensidad, irradiación]&#10;Zona 2 — [tipo, intensidad, irradiación]&#10;..."></textarea>
+          </div>
+          <div class="info-note">
+            <strong>Distribución:</strong><br>
+            • <em>Dermatoma</em> → posible origen nervioso<br>
+            • <em>Esclerotoma</em> → posible origen articular/discal<br>
+            • <em>Local</em> → posible origen miofascial<br>
+            • <em>Bilateral simétrico</em> → considerar causa central
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+  PANEL 6 — ANÁLISIS POSTURAL
+══════════════════════════════════════════════════════════════════════════ -->
+<div class="panel" id="p6">
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-number">07 · Exploración</div>
+      <h1 class="page-title">Análisis <em>Postural</em></h1>
+    </div>
+    <div class="nav-arrows">
+      <button class="btn-arrow" onclick="go(5)">←</button>
+      <button class="btn-arrow" onclick="go(7)">→</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-header-icon" style="background:var(--teal);color:#fff">👁</div><span class="card-title">Vista Anterior</span></div>
+    <div class="card-body">
+      <div class="g3">
+        <div class="field"><label>Cabeza / Cuello</label><select><option value="">—</option><option>Normal</option><option>Inclinación derecha</option><option>Inclinación izquierda</option><option>Rotación derecha</option><option>Rotación izquierda</option></select></div>
+        <div class="field"><label>Hombros</label><select><option value="">—</option><option>Simétricos</option><option>Hombro D elevado</option><option>Hombro I elevado</option><option>Antepulsión bilateral</option></select></div>
+        <div class="field"><label>Línea mamilar</label><select><option value="">—</option><option>Horizontal</option><option>Inclinada derecha</option><option>Inclinada izquierda</option></select></div>
+        <div class="field"><label>Pelvis (EIAS)</label><select><option value="">—</option><option>Simétrica</option><option>EIAS D elevada</option><option>EIAS I elevada</option></select></div>
+        <div class="field"><label>Rodillas</label><select><option value="">—</option><option>Normal</option><option>Genu valgo bilateral</option><option>Genu varo bilateral</option><option>Valgo D / Varo I</option><option>Varo D / Valgo I</option></select></div>
+        <div class="field"><label>Pies</label><select><option value="">—</option><option>Normal</option><option>Pronación bilateral</option><option>Supinación bilateral</option><option>Pronación unilateral D</option><option>Pronación unilateral I</option></select></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-header-icon" style="background:var(--blue);color:#fff">👁</div><span class="card-title">Vista Lateral</span></div>
+    <div class="card-body">
+      <div class="g3">
+        <div class="field"><label>Posición de la cabeza</label><select><option value="">—</option><option>Normal</option><option>Adelantada (FHP)</option><option>Retrasada</option></select></div>
+        <div class="field"><label>Lordosis cervical</label><select><option value="">—</option><option>Normal</option><option>Hiperlordosis</option><option>Rectificada</option><option>Cifosis cervical</option></select></div>
+        <div class="field"><label>Cifosis dorsal</label><select><option value="">—</option><option>Normal</option><option>Hipercifosis</option><option>Hipocifosis / Plana</option></select></div>
+        <div class="field"><label>Lordosis lumbar</label><select><option value="">—</option><option>Normal</option><option>Hiperlordosis</option><option>Rectificada / Plana</option><option>Inversión de curva</option></select></div>
+        <div class="field"><label>Pelvis (sagital)</label><select><option value="">—</option><option>Normal</option><option>Anteversión</option><option>Retroversión</option></select></div>
+        <div class="field"><label>Rodilla (sagital)</label><select><option value="">—</option><option>Normal</option><option>Genu recurvatum</option><option>Flexo de rodilla</option></select></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-header-icon" style="background:var(--amber);color:#fff">👁</div><span class="card-title">Vista Posterior</span></div>
+    <div class="card-body">
+      <div class="g3">
+        <div class="field"><label>Escoliosis</label><select><option value="">—</option><option>No observada</option><option>Escoliosis leve D</option><option>Escoliosis leve I</option><option>Escoliosis moderada D</option><option>Escoliosis moderada I</option><option>Doble curva</option></select></div>
+        <div class="field"><label>Escápulas</label><select><option value="">—</option><option>Simétricas</option><option>Escápula alada bilateral</option><option>Escápula alada D</option><option>Escápula alada I</option><option>Asimetría en altura</option></select></div>
+        <div class="field"><label>Pliegue glúteo</label><select><option value="">—</option><option>Simétrico</option><option>Asimetría derecha</option><option>Asimetría izquierda</option></select></div>
+      </div>
+      <div class="field" style="margin-top:12px"><label>Observaciones posturales adicionales</label><textarea placeholder="Compensaciones, patrones significativos, hallazgos relevantes..."></textarea></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+  PANEL 7 — MOVILIDAD
+══════════════════════════════════════════════════════════════════════════ -->
+<div class="panel" id="p7">
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-number">08 · Exploración</div>
+      <h1 class="page-title">Movilidad Activa <em>& Pasiva</em></h1>
+      <p class="page-subtitle">Rango articular en grados · End-feel · Reproducción de síntomas</p>
+    </div>
+    <div class="nav-arrows">
+      <button class="btn-arrow" onclick="go(6)">←</button>
+      <button class="btn-arrow" onclick="go(8)">→</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-header-icon" style="background:var(--teal);color:#fff">📍</div><span class="card-title">Seleccionar zona — puedes abrir varias a la vez</span></div>
+    <div class="card-body">
+      <div class="zone-tabs">
+        <div class="zone-tab" onclick="toggleZone('mob','cervical',this)">Cervical</div>
+        <div class="zone-tab" onclick="toggleZone('mob','lumbar',this)">Lumbar</div>
+        <div class="zone-tab" onclick="toggleZone('mob','hombro',this)">Hombro</div>
+        <div class="zone-tab" onclick="toggleZone('mob','codo',this)">Codo</div>
+        <div class="zone-tab" onclick="toggleZone('mob','muneca',this)">Muñeca</div>
+        <div class="zone-tab" onclick="toggleZone('mob','cadera',this)">Cadera</div>
+        <div class="zone-tab" onclick="toggleZone('mob','rodilla',this)">Rodilla</div>
+        <div class="zone-tab" onclick="toggleZone('mob','tobillo',this)">Tobillo / Pie</div>
+      </div>
+      <p style="font-size:12px;color:var(--ink-faint);font-family:var(--mono)">↑ Haz clic en una región para mostrarla / ocultarla. Puedes tener varias abiertas a la vez.</p>
+    </div>
+  </div>
+
+  <div id="mob-cervical" class="mob-section">
+    <div class="card"><div class="card-header"><div class="card-header-icon" style="background:var(--teal);color:#fff">🔄</div><span class="card-title">Movilidad Cervical (°) — Normativa: F50 · E60 · IL45 · R80</span></div><div class="card-body">
+    <table class="data-table"><thead><tr><th>Movimiento</th><th class="center">Activo</th><th class="center">Pasivo</th><th class="center">End-feel</th><th class="center">Dolor</th></tr></thead><tbody>
+      <tr><td>Flexión</td><td><input type="number" min="0" max="90" placeholder="°"></td><td><input type="number" min="0" max="90" placeholder="°"></td><td><input type="text" class="wide" placeholder="Elástico / Duro..."></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+      <tr><td>Extensión</td><td><input type="number" min="0" max="90" placeholder="°"></td><td><input type="number" min="0" max="90" placeholder="°"></td><td><input type="text" class="wide" placeholder=""></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+      <tr><td>Inclinación D</td><td><input type="number" min="0" max="60" placeholder="°"></td><td><input type="number" min="0" max="60" placeholder="°"></td><td><input type="text" class="wide" placeholder=""></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+      <tr><td>Inclinación I</td><td><input type="number" min="0" max="60" placeholder="°"></td><td><input type="number" min="0" max="60" placeholder="°"></td><td><input type="text" class="wide" placeholder=""></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+      <tr><td>Rotación D</td><td><input type="number" min="0" max="90" placeholder="°"></td><td><input type="number" min="0" max="90" placeholder="°"></td><td><input type="text" class="wide" placeholder=""></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+      <tr><td>Rotación I</td><td><input type="number" min="0" max="90" placeholder="°"></td><td><input type="number" min="0" max="90" placeholder="°"></td><td><input type="text" class="wide" placeholder=""></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+    </tbody></table></div></div>
+  </div>
+
+  <div id="mob-lumbar" class="mob-section">
+    <div class="card"><div class="card-header"><div class="card-header-icon" style="background:var(--teal);color:#fff">🔄</div><span class="card-title">Movilidad Lumbar — Schober · F+5cm normativo</span></div><div class="card-body">
+    <table class="data-table"><thead><tr><th>Movimiento</th><th class="center">Activo</th><th class="center">Pasivo</th><th class="center">Schober (cm)</th><th class="center">End-feel</th><th class="center">Dolor</th></tr></thead><tbody>
+      <tr><td>Flexión</td><td><input type="text" placeholder="°/cm"></td><td><input type="text" placeholder="°/cm"></td><td><input type="number" placeholder="cm"></td><td><input type="text" class="wide" placeholder=""></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+      <tr><td>Extensión</td><td><input type="text" placeholder="°"></td><td><input type="text" placeholder="°"></td><td>—</td><td><input type="text" class="wide" placeholder=""></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+      <tr><td>Inclinación D</td><td><input type="text" placeholder="°/cm"></td><td><input type="text" placeholder="°/cm"></td><td>—</td><td><input type="text" class="wide" placeholder=""></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+      <tr><td>Inclinación I</td><td><input type="text" placeholder="°/cm"></td><td><input type="text" placeholder="°/cm"></td><td>—</td><td><input type="text" class="wide" placeholder=""></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+    </tbody></table></div></div>
+  </div>
+
+  <div id="mob-hombro" class="mob-section">
+    <div class="card"><div class="card-header"><div class="card-header-icon" style="background:var(--teal);color:#fff">🔄</div><span class="card-title">Movilidad Hombro (°) — F/E/Abd 180 · RE/RI 90</span></div><div class="card-body">
+    <table class="data-table"><thead><tr><th>Movimiento</th><th class="center">Act D</th><th class="center">Act I</th><th class="center">Pas D</th><th class="center">Pas I</th><th class="center">Dolor D</th><th class="center">Dolor I</th></tr></thead><tbody>
+      <tr><td>Flexión</td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+      <tr><td>Extensión</td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+      <tr><td>Abducción</td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+      <tr><td>Rot. externa</td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+      <tr><td>Rot. interna</td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+    </tbody></table></div></div>
+  </div>
+
+  <div id="mob-cadera" class="mob-section">
+    <div class="card"><div class="card-header"><div class="card-header-icon" style="background:var(--teal);color:#fff">🔄</div><span class="card-title">Movilidad Cadera (°) — F110-120 · E10-15 · Abd30-40 · RE40-60 · RI30-40</span></div><div class="card-body">
+    <table class="data-table"><thead><tr><th>Movimiento</th><th class="center">Act D</th><th class="center">Act I</th><th class="center">Pas D</th><th class="center">Pas I</th><th class="center">Dolor D</th><th class="center">Dolor I</th></tr></thead><tbody>
+      <tr><td>Flexión</td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+      <tr><td>Extensión</td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+      <tr><td>Rot. externa</td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+      <tr><td>Rot. interna</td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+      <tr><td>Abducción</td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+      <tr><td>Aducción</td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+    </tbody></table></div></div>
+  </div>
+
+  <div id="mob-rodilla" class="mob-section">
+    <div class="card"><div class="card-header"><div class="card-header-icon" style="background:var(--teal);color:#fff">🔄</div><span class="card-title">Movilidad Rodilla (°) — F135 · Ext0 · RE30-40 · RI20-30</span></div><div class="card-body">
+    <table class="data-table"><thead><tr><th>Movimiento</th><th class="center">Act D</th><th class="center">Act I</th><th class="center">Pas D</th><th class="center">Pas I</th><th class="center">Dolor D</th><th class="center">Dolor I</th></tr></thead><tbody>
+      <tr><td>Flexión</td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+      <tr><td>Extensión</td><td><input type="number" placeholder="°" min="-30" max="20"></td><td><input type="number" placeholder="°" min="-30" max="20"></td><td><input type="number" placeholder="°" min="-30" max="20"></td><td><input type="number" placeholder="°" min="-30" max="20"></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+    </tbody></table></div></div>
+  </div>
+
+  <div id="mob-tobillo" class="mob-section">
+    <div class="card"><div class="card-header"><div class="card-header-icon" style="background:var(--teal);color:#fff">🔄</div><span class="card-title">Movilidad Tobillo / Pie (°)</span></div><div class="card-body">
+    <table class="data-table"><thead><tr><th>Movimiento</th><th class="center">Act D</th><th class="center">Act I</th><th class="center">Pas D</th><th class="center">Pas I</th><th class="center">Dolor</th></tr></thead><tbody>
+      <tr><td>Flex. dorsal</td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí D</option><option>Sí I</option></select></td></tr>
+      <tr><td>Flex. plantar</td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí D</option><option>Sí I</option></select></td></tr>
+      <tr><td>Inversión</td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí D</option><option>Sí I</option></select></td></tr>
+      <tr><td>Eversión</td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí D</option><option>Sí I</option></select></td></tr>
+      <tr><td>Lunge Test D / I</td><td colspan="4"><input type="text" style="width:200px" placeholder="ej. 10 cm D / 10 cm I"></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>Normal</option><option>Restricción D</option><option>Restricción I</option></select></td></tr>
+    </tbody></table></div></div>
+  </div>
+
+  <div id="mob-codo" class="mob-section">
+    <div class="card"><div class="card-header"><div class="card-header-icon" style="background:var(--teal);color:#fff">🔄</div><span class="card-title">Movilidad Codo / Antebrazo (°)</span></div><div class="card-body">
+    <table class="data-table"><thead><tr><th>Movimiento</th><th class="center">Act D</th><th class="center">Act I</th><th class="center">Pas D</th><th class="center">Pas I</th><th class="center">Dolor</th></tr></thead><tbody>
+      <tr><td>Flexión (0–145°)</td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+      <tr><td>Extensión</td><td><input type="number" placeholder="°" min="-20" max="20"></td><td><input type="number" placeholder="°" min="-20" max="20"></td><td><input type="number" placeholder="°" min="-20" max="20"></td><td><input type="number" placeholder="°" min="-20" max="20"></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+      <tr><td>Pronación (0–80°)</td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+      <tr><td>Supinación (0–85°)</td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+    </tbody></table></div></div>
+  </div>
+
+  <div id="mob-muneca" class="mob-section">
+    <div class="card"><div class="card-header"><div class="card-header-icon" style="background:var(--teal);color:#fff">🔄</div><span class="card-title">Movilidad Muñeca (°)</span></div><div class="card-body">
+    <table class="data-table"><thead><tr><th>Movimiento</th><th class="center">Act D</th><th class="center">Act I</th><th class="center">Pas D</th><th class="center">Pas I</th><th class="center">Dolor</th></tr></thead><tbody>
+      <tr><td>Flexión (0–80°)</td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+      <tr><td>Extensión (0–70°)</td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+      <tr><td>Desv. radial (0–25°)</td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+      <tr><td>Desv. cubital (0–35°)</td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><input type="number" placeholder="°"></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>No</option><option>Sí</option></select></td></tr>
+    </tbody></table></div></div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="card-header"><div class="card-header-icon" style="background:var(--ink-soft);color:#fff">📝</div><span class="card-title">Observaciones de movilidad</span></div>
+    <div class="card-body">
+      <div class="field"><textarea placeholder="Patrones de restricción · Calidad del movimiento · Síntomas reproducidos · End-feel general..."></textarea></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+  PANEL 8 — FUERZA MUSCULAR
+══════════════════════════════════════════════════════════════════════════ -->
+<div class="panel" id="p8">
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-number">09 · Exploración</div>
+      <h1 class="page-title">Fuerza <em>Muscular</em></h1>
+      <p class="page-subtitle">Escala MRC 0–5 · Tests funcionales · Dinamometría</p>
+    </div>
+    <div class="nav-arrows">
+      <button class="btn-arrow" onclick="go(7)">←</button>
+      <button class="btn-arrow" onclick="go(9)">→</button>
+    </div>
+  </div>
+
+  <div class="info-note" style="margin-bottom:16px">
+    <strong>Escala MRC:</strong> 0=Sin contracción · 1=Contracción visible sin movimiento · 2=Movimiento sin gravedad · 3=Movimiento contra gravedad · 4=Movimiento contra resistencia parcial · 5=Fuerza normal
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-header-icon" style="background:var(--teal);color:#fff">📍</div><span class="card-title">Seleccionar región — puedes abrir varias a la vez</span></div>
+    <div class="card-body">
+      <div class="zone-tabs">
+        <div class="zone-tab" onclick="toggleZone('str','mmss',this)">MMSS</div>
+        <div class="zone-tab" onclick="toggleZone('str','mmii',this)">MMII</div>
+        <div class="zone-tab" onclick="toggleZone('str','tronco',this)">Tronco / Core</div>
+        <div class="zone-tab" onclick="toggleZone('str','custom',this)">+ Músculo libre</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="str-mmss" class="str-section">
+    <div class="card"><div class="card-header"><div class="card-header-icon" style="background:var(--blue);color:#fff">💪</div>
+    <span class="card-title">Fuerza Miembro Superior — MRC + Dinamometría</span>
+    <button onclick="addCustomRow('b-mmss-body','sides')" style="margin-left:auto;font-size:11px;padding:4px 10px;border-radius:5px;border:1px solid var(--border);cursor:pointer;background:var(--surface2)">+ Añadir músculo</button>
+    </div><div class="card-body">
+    <table class="data-table"><thead><tr><th>Músculo / Grupo</th><th class="center" style="width:220px">MRC Dcho</th><th class="center" style="width:220px">MRC Izdo</th><th class="center">Dino D (kg)</th><th class="center">Dino I (kg)</th><th>Notas</th></tr></thead><tbody id="b-mmss-body"></tbody></table>
+    </div></div>
+  </div>
+  <div id="str-mmii" class="str-section">
+    <div class="card"><div class="card-header"><div class="card-header-icon" style="background:var(--blue);color:#fff">💪</div>
+    <span class="card-title">Fuerza Miembro Inferior — MRC + Dinamometría</span>
+    <button onclick="addCustomRow('b-mmii-body','sides')" style="margin-left:auto;font-size:11px;padding:4px 10px;border-radius:5px;border:1px solid var(--border);cursor:pointer;background:var(--surface2)">+ Añadir músculo</button>
+    </div><div class="card-body">
+    <table class="data-table"><thead><tr><th>Músculo / Grupo</th><th class="center" style="width:220px">MRC Dcho</th><th class="center" style="width:220px">MRC Izdo</th><th class="center">Dino D (kg)</th><th class="center">Dino I (kg)</th><th>Notas</th></tr></thead><tbody id="b-mmii-body"></tbody></table>
+    </div></div>
+  </div>
+  <div id="str-tronco" class="str-section">
+    <div class="card"><div class="card-header"><div class="card-header-icon" style="background:var(--blue);color:#fff">💪</div>
+    <span class="card-title">Fuerza Tronco / Core — MRC</span>
+    <button onclick="addCustomRow('b-tronco-body','single')" style="margin-left:auto;font-size:11px;padding:4px 10px;border-radius:5px;border:1px solid var(--border);cursor:pointer;background:var(--surface2)">+ Añadir músculo</button>
+    </div><div class="card-body">
+    <table class="data-table"><thead><tr><th>Músculo / Grupo</th><th class="center" style="width:220px">MRC</th><th class="center">Dinamómetro (kg)</th><th>Notas</th></tr></thead><tbody id="b-tronco-body"></tbody></table>
+    </div></div>
+  </div>
+  <div id="str-custom" class="str-section">
+    <div class="card"><div class="card-header"><div class="card-header-icon" style="background:var(--amber);color:#fff">✏️</div>
+    <span class="card-title">Valoración libre — Músculos específicos</span>
+    <button onclick="addCustomRow('b-custom-body','sides')" style="margin-left:auto;font-size:11px;padding:4px 10px;border-radius:5px;border:1px solid var(--border);cursor:pointer;background:var(--surface2)">+ Añadir fila</button>
+    </div><div class="card-body">
+    <p style="font-size:12px;color:var(--ink-soft);margin-bottom:12px">Añade cualquier músculo a valorar con nombre libre. Introduce el valor MRC (Daniels) o el de dinamometría.</p>
+    <table class="data-table"><thead><tr><th>Músculo / Grupo muscular</th><th class="center" style="width:220px">MRC Dcho / Bilateral</th><th class="center" style="width:220px">MRC Izdo</th><th class="center">Dino D (kg)</th><th class="center">Dino I (kg)</th><th>Observaciones</th><th style="width:32px"></th></tr></thead><tbody id="b-custom-body"></tbody></table>
+    </div></div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="card-header"><div class="card-header-icon" style="background:var(--amber);color:#fff">🏋️</div><span class="card-title">Tests Funcionales de Fuerza</span></div>
+    <div class="card-body">
+      <div class="g4">
+        <div class="field"><label>Grip strength D (kg)</label><input type="number" placeholder="—"></div>
+        <div class="field"><label>Grip strength I (kg)</label><input type="number" placeholder="—"></div>
+        <div class="field"><label>Sit-to-Stand 30s (reps)</label><input type="number" placeholder="—"></div>
+        <div class="field"><label>Heel rise unilateral D/I</label><input type="text" placeholder="reps D / reps I"></div>
+        <div class="field"><label>Push-up test (reps)</label><input type="number" placeholder="—"></div>
+        <div class="field"><label>Pull-up / Inverted row</label><input type="text" placeholder="—"></div>
+        <div class="field"><label>Sorensen test (seg)</label><input type="number" placeholder="—"></div>
+        <div class="field"><label>Plancha lateral D / I (seg)</label><input type="text" placeholder="seg D / seg I"></div>
+      </div>
+      <div class="field" style="margin-top:12px"><label>Observaciones de fuerza</label><textarea placeholder="Compensaciones · Dolor durante prueba · Fatiga precoz · Asimetrías..."></textarea></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+  PANEL 9 — VALORACIÓN NEUROLÓGICA
+══════════════════════════════════════════════════════════════════════════ -->
+<div class="panel" id="p9">
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-number">10 · Exploración</div>
+      <h1 class="page-title">Valoración <em>Neurológica</em></h1>
+      <p class="page-subtitle">Reflejos · Dermatomas · Sensibilidad · Coordinación</p>
+    </div>
+    <div class="nav-arrows">
+      <button class="btn-arrow" onclick="go(8)">←</button>
+      <button class="btn-arrow" onclick="go(10)">→</button>
+    </div>
+  </div>
+
+  <div class="card accent-blue">
+    <div class="card-header"><div class="card-header-icon">⚡</div><span class="card-title">Reflejos Osteotendinosos</span></div>
+    <div class="card-body">
+      <p style="font-size:12px;color:var(--ink-soft);margin-bottom:14px">0=Arreflexia · +=Hiporreflexia · ++=Normal · +++=Hiperreflexia</p>
+      <table class="data-table"><thead><tr><th>Reflejo</th><th>Nivel</th><th class="center">Dcho</th><th class="center">Izdo</th><th>Observaciones</th></tr></thead><tbody>
+        <tr><td>Bicipital</td><td><span class="neuro-badge">C5–C6</span></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>++ Normal</option><option>+ Hiporreflexia</option><option>0 Arreflexia</option><option>+++ Hiperreflexia</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>++ Normal</option><option>+ Hiporreflexia</option><option>0 Arreflexia</option><option>+++ Hiperreflexia</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+        <tr><td>Tricipital</td><td><span class="neuro-badge">C7</span></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>++ Normal</option><option>+ Hiporreflexia</option><option>0 Arreflexia</option><option>+++ Hiperreflexia</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>++ Normal</option><option>+ Hiporreflexia</option><option>0 Arreflexia</option><option>+++ Hiperreflexia</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+        <tr><td>Estilorradial</td><td><span class="neuro-badge">C6</span></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>++ Normal</option><option>+ Hiporreflexia</option><option>0 Arreflexia</option><option>+++ Hiperreflexia</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>++ Normal</option><option>+ Hiporreflexia</option><option>0 Arreflexia</option><option>+++ Hiperreflexia</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+        <tr><td>Rotuliano</td><td><span class="neuro-badge">L3–L4</span></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>++ Normal</option><option>+ Hiporreflexia</option><option>0 Arreflexia</option><option>+++ Hiperreflexia</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>++ Normal</option><option>+ Hiporreflexia</option><option>0 Arreflexia</option><option>+++ Hiperreflexia</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+        <tr><td>Aquíleo</td><td><span class="neuro-badge">S1</span></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>++ Normal</option><option>+ Hiporreflexia</option><option>0 Arreflexia</option><option>+++ Hiperreflexia</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>++ Normal</option><option>+ Hiporreflexia</option><option>0 Arreflexia</option><option>+++ Hiperreflexia</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+        <tr><td style="font-weight:600">Babinski</td><td><span class="neuro-badge">MN sup.</span></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>Negativo ✓</option><option>Positivo ⚠️</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>Negativo ✓</option><option>Positivo ⚠️</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-header-icon" style="background:var(--amber);color:#fff">🖐</div><span class="card-title">Sensibilidad — Dermatomas</span></div>
+    <div class="card-body">
+      <p style="font-size:12px;color:var(--ink-soft);margin-bottom:14px">N=Normal · H=Hipoestesia · HE=Hiperestesia · A=Anestesia</p>
+      <table class="data-table"><thead><tr><th>Dermatoma / Zona</th><th class="center">Tác. D</th><th class="center">Tác. I</th><th class="center">Dolor D</th><th class="center">Dolor I</th><th class="center">Temp. D</th><th class="center">Temp. I</th></tr></thead><tbody>
+        <tr><td>C5 — Hombro lat.</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>Alt.</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>Alt.</option></select></td></tr>
+        <tr><td>C6 — Pulgar / índice</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>Alt.</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>Alt.</option></select></td></tr>
+        <tr><td>C7 — Dedo medio</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>Alt.</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>Alt.</option></select></td></tr>
+        <tr><td>C8 — Meñique</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>Alt.</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>Alt.</option></select></td></tr>
+        <tr><td>L3 — Cara ant. muslo</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>Alt.</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>Alt.</option></select></td></tr>
+        <tr><td>L4 — Cara med. pierna</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>Alt.</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>Alt.</option></select></td></tr>
+        <tr><td>L5 — Dorso pie / 1er dedo</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>Alt.</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>Alt.</option></select></td></tr>
+        <tr><td>S1 — Borde ext. pie</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>H</option><option>HE</option><option>A</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>Alt.</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>N</option><option>Alt.</option></select></td></tr>
+      </tbody></table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-header-icon" style="background:var(--green);color:#fff">🏃</div><span class="card-title">Coordinación, Equilibrio & Marcha</span></div>
+    <div class="card-body">
+      <div class="g4">
+        <div class="field"><label>Test Romberg</label><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>Negativo</option><option>Pos. ojos abiertos</option><option>Pos. ojos cerrados</option></select></div>
+        <div class="field"><label>Patrón de marcha</label><select><option>—</option><option>Normal</option><option>Antálgica</option><option>Steppage</option><option>Trendelenburg</option><option>Espástica</option><option>Atáxica</option></select></div>
+        <div class="field"><label>Dedo–nariz</label><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>Normal</option><option>Dismetría D</option><option>Dismetría I</option></select></div>
+        <div class="field"><label>Talón–rodilla</label><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>Normal</option><option>Dismetría D</option><option>Dismetría I</option></select></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+  PANEL 10 — TESTS ORTOPÉDICOS
+══════════════════════════════════════════════════════════════════════════ -->
+<div class="panel" id="p10">
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-number">11 · Exploración</div>
+      <h1 class="page-title">Tests <em>Ortopédicos</em></h1>
+    </div>
+    <div class="nav-arrows">
+      <button class="btn-arrow" onclick="go(9)">←</button>
+      <button class="btn-arrow" onclick="go(11)">→</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-header-icon" style="background:var(--teal);color:#fff">📍</div><span class="card-title">Seleccionar región</span></div>
+    <div class="card-body">
+      <div class="zone-tabs">
+        <div class="zone-tab" onclick="showZone('test','cervical',this)">Cervical</div>
+        <div class="zone-tab" onclick="showZone('test','hombro',this)">Hombro</div>
+        <div class="zone-tab" onclick="showZone('test','codo',this)">Codo</div>
+        <div class="zone-tab" onclick="showZone('test','muneca',this)">Muñeca / Mano</div>
+        <div class="zone-tab" onclick="showZone('test','lumbar',this)">Lumbar / SIJ</div>
+        <div class="zone-tab" onclick="showZone('test','cadera',this)">Cadera</div>
+        <div class="zone-tab" onclick="showZone('test','rodilla',this)">Rodilla</div>
+        <div class="zone-tab" onclick="showZone('test','tobillo',this)">Tobillo / Pie</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="test-cervical" class="test-section">
+    <div class="card"><div class="card-header"><div class="card-header-icon" style="background:var(--teal);color:#fff">🔬</div><span class="card-title">Tests Cervicales</span></div><div class="card-body">
+    <table class="data-table"><thead><tr><th>Test</th><th>Estructura valorada</th><th class="center">D</th><th class="center">I</th><th>Notas</th></tr></thead><tbody>
+      <tr><td><strong>Spurling</strong></td><td style="font-size:11px;color:var(--ink-soft)">Foramen / raíz nerviosa</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>Distracción cervical</strong></td><td style="font-size:11px;color:var(--ink-soft)">Raíz nerviosa</td><td colspan="2"><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>ULTT1</strong> (mediano)</td><td style="font-size:11px;color:var(--ink-soft)">N. mediano, C5–C6</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>ULTT2</strong> (radial)</td><td style="font-size:11px;color:var(--ink-soft)">N. radial, C6–C7</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>ULTT3</strong> (cubital)</td><td style="font-size:11px;color:var(--ink-soft)">N. cubital, C8–T1</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>Sharp–Purser</strong></td><td style="font-size:11px;color:var(--ink-soft)">Lig. transverso atlas ⚠️</td><td colspan="2"><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo ⚠️</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>Cluster Wainner</strong></td><td style="font-size:11px;color:var(--ink-soft)">Radiculopatía cervical</td><td colspan="2"><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>≥3/4 alta prob.</option><option>&lt;3/4 baja prob.</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+    </tbody></table></div></div>
+  </div>
+
+  <div id="test-hombro" class="test-section">
+    <div class="card"><div class="card-header"><div class="card-header-icon" style="background:var(--teal);color:#fff">🔬</div><span class="card-title">Tests de Hombro</span></div><div class="card-body">
+    <table class="data-table"><thead><tr><th>Test</th><th>Estructura</th><th class="center">D</th><th class="center">I</th><th>Notas</th></tr></thead><tbody>
+      <tr><td><strong>Neer</strong></td><td style="font-size:11px;color:var(--ink-soft)">Impingement subacromial</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>Hawkins–Kennedy</strong></td><td style="font-size:11px;color:var(--ink-soft)">Impingement subacromial</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>Jobe</strong> (Empty can)</td><td style="font-size:11px;color:var(--ink-soft)">Supraespinoso</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>Speed</strong></td><td style="font-size:11px;color:var(--ink-soft)">LBCA / SLAP superior</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>Aprehensión</strong></td><td style="font-size:11px;color:var(--ink-soft)">Inestabilidad anterior</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>Reubicación</strong></td><td style="font-size:11px;color:var(--ink-soft)">Inestabilidad anterior</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>Sulcus sign</strong></td><td style="font-size:11px;color:var(--ink-soft)">Inestabilidad inferior</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+    </tbody></table></div></div>
+  </div>
+
+  <div id="test-lumbar" class="test-section">
+    <div class="card"><div class="card-header"><div class="card-header-icon" style="background:var(--teal);color:#fff">🔬</div><span class="card-title">Tests Lumbar / SIJ</span></div><div class="card-body">
+    <table class="data-table"><thead><tr><th>Test</th><th>Estructura</th><th class="center">D</th><th class="center">I</th><th>Ángulo / Notas</th></tr></thead><tbody>
+      <tr><td><strong>Lasègue (SLR)</strong></td><td style="font-size:11px;color:var(--ink-soft)">N. ciático / disco</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder="ej. + a 45°"></td></tr>
+      <tr><td><strong>Crossed SLR</strong></td><td style="font-size:11px;color:var(--ink-soft)">Hernia discal central</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>Slump test</strong></td><td style="font-size:11px;color:var(--ink-soft)">Sensibilización neural</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>FABER</strong></td><td style="font-size:11px;color:var(--ink-soft)">SIJ / cadera</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>Gaenslen</strong></td><td style="font-size:11px;color:var(--ink-soft)">SIJ</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>Posterior shear (POSH)</strong></td><td style="font-size:11px;color:var(--ink-soft)">SIJ</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+    </tbody></table></div></div>
+  </div>
+
+  <div id="test-cadera" class="test-section">
+    <div class="card"><div class="card-header"><div class="card-header-icon" style="background:var(--teal);color:#fff">🔬</div><span class="card-title">Tests de Cadera</span></div><div class="card-body">
+    <table class="data-table"><thead><tr><th>Test</th><th>Estructura</th><th class="center">D</th><th class="center">I</th><th>Notas</th></tr></thead><tbody>
+      <tr><td><strong>FADIR</strong></td><td style="font-size:11px;color:var(--ink-soft)">FAI / labrum</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>FABER / Patrick</strong></td><td style="font-size:11px;color:var(--ink-soft)">SIJ / cadera</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>Thomas</strong></td><td style="font-size:11px;color:var(--ink-soft)">Flexores de cadera</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>Trendelenburg</strong></td><td style="font-size:11px;color:var(--ink-soft)">Glúteo medio</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>Ober</strong></td><td style="font-size:11px;color:var(--ink-soft)">TFL / Banda IT</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+    </tbody></table></div></div>
+  </div>
+
+  <div id="test-rodilla" class="test-section">
+    <div class="card"><div class="card-header"><div class="card-header-icon" style="background:var(--teal);color:#fff">🔬</div><span class="card-title">Tests de Rodilla</span></div><div class="card-body">
+    <table class="data-table"><thead><tr><th>Test</th><th>Estructura</th><th class="center">D</th><th class="center">I</th><th>Notas</th></tr></thead><tbody>
+      <tr><td><strong>Lachman</strong></td><td style="font-size:11px;color:var(--ink-soft)">LCA</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder="G I/II/III"></td></tr>
+      <tr><td><strong>Cajón anterior</strong></td><td style="font-size:11px;color:var(--ink-soft)">LCA</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>Cajón posterior</strong></td><td style="font-size:11px;color:var(--ink-soft)">LCP</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>Valgus stress</strong></td><td style="font-size:11px;color:var(--ink-soft)">LLI</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>Varus stress</strong></td><td style="font-size:11px;color:var(--ink-soft)">LLE</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>McMurray</strong></td><td style="font-size:11px;color:var(--ink-soft)">Menisco</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder="med/lat"></td></tr>
+      <tr><td><strong>Thessaly</strong></td><td style="font-size:11px;color:var(--ink-soft)">Menisco</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>Clarke / Zohlen</strong></td><td style="font-size:11px;color:var(--ink-soft)">Cartílago rotuliano</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+    </tbody></table></div></div>
+  </div>
+
+  <div id="test-tobillo" class="test-section">
+    <div class="card"><div class="card-header"><div class="card-header-icon" style="background:var(--teal);color:#fff">🔬</div><span class="card-title">Tests Tobillo / Pie</span></div><div class="card-body">
+    <table class="data-table"><thead><tr><th>Test</th><th>Estructura</th><th class="center">D</th><th class="center">I</th><th>Notas</th></tr></thead><tbody>
+      <tr><td><strong>Cajón anterior tobillo</strong></td><td style="font-size:11px;color:var(--ink-soft)">LTFA</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>Talar tilt</strong></td><td style="font-size:11px;color:var(--ink-soft)">LPF</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>Thompson</strong></td><td style="font-size:11px;color:var(--ink-soft)">Tendón de Aquiles</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>Windlass</strong></td><td style="font-size:11px;color:var(--ink-soft)">Fascia plantar</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>Ottawa Ankle Rules</strong></td><td style="font-size:11px;color:var(--ink-soft)">Fractura / imagen</td><td colspan="2"><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Imagen indicada</option><option>– No precisa imagen</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+    </tbody></table></div></div>
+  </div>
+
+  <div id="test-codo" class="test-section">
+    <div class="card"><div class="card-header"><div class="card-header-icon" style="background:var(--teal);color:#fff">🔬</div><span class="card-title">Tests de Codo</span></div><div class="card-body">
+    <table class="data-table"><thead><tr><th>Test</th><th>Estructura</th><th class="center">D</th><th class="center">I</th><th>Notas</th></tr></thead><tbody>
+      <tr><td><strong>Mill's / Cozen</strong></td><td style="font-size:11px;color:var(--ink-soft)">Epicondilalgia lateral</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>Maudsley</strong></td><td style="font-size:11px;color:var(--ink-soft)">Extensor dedo medio</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>Epicóndilo medial</strong></td><td style="font-size:11px;color:var(--ink-soft)">Epicondilalgia medial</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+    </tbody></table></div></div>
+  </div>
+
+  <div id="test-muneca" class="test-section">
+    <div class="card"><div class="card-header"><div class="card-header-icon" style="background:var(--teal);color:#fff">🔬</div><span class="card-title">Tests Muñeca / Mano</span></div><div class="card-body">
+    <table class="data-table"><thead><tr><th>Test</th><th>Estructura</th><th class="center">D</th><th class="center">I</th><th>Notas</th></tr></thead><tbody>
+      <tr><td><strong>Phalen</strong></td><td style="font-size:11px;color:var(--ink-soft)">Túnel carpiano / N. mediano</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>Tinel</strong></td><td style="font-size:11px;color:var(--ink-soft)">N. mediano</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+      <tr><td><strong>Finkelstein</strong></td><td style="font-size:11px;color:var(--ink-soft)">De Quervain (1er compartimento)</td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><select class="result-sel" onchange="colorSel(this)"><option>—</option><option>+ Positivo</option><option>– Negativo</option></select></td><td><input type="text" class="wide" placeholder=""></td></tr>
+    </tbody></table></div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+  PANEL 11 — RAZONAMIENTO CLÍNICO
+══════════════════════════════════════════════════════════════════════════ -->
+<div class="panel" id="p11">
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-number">12 · Síntesis</div>
+      <h1 class="page-title">Razonamiento <em>Clínico</em></h1>
+      <p class="page-subtitle">Diagnóstico fisioterapéutico · Objetivos · Plan de tratamiento</p>
+    </div>
+    <div class="nav-arrows">
+      <button class="btn-arrow" onclick="go(10)">←</button>
+      <button class="btn-arrow" disabled>→</button>
+    </div>
+  </div>
+
+  <div class="summary-grid">
+    <div class="summary-card">
+      <div class="sc-label">Hipótesis diagnóstica principal</div>
+      <textarea placeholder="Diagnóstico fisioterapéutico, estructura(s) implicada(s)..."></textarea>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">Diagnóstico diferencial</div>
+      <textarea placeholder="Otros diagnósticos considerados y razones para incluirlos/descartarlos..."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-header-icon" style="background:var(--teal);color:#fff">🎯</div><span class="card-title">Clasificación & Pronóstico</span></div>
+    <div class="card-body">
+      <div class="g3">
+        <div>
+          <label style="font-family:var(--mono);font-size:9.5px;letter-spacing:0.8px;text-transform:uppercase;color:var(--ink-soft);display:block;margin-bottom:8px">Estructura(s) implicada(s)</label>
+          <div class="chips" id="chips-struct">
+            <div class="chip" onclick="toggleChip(this)">Muscular</div>
+            <div class="chip" onclick="toggleChip(this)">Tendinosa</div>
+            <div class="chip" onclick="toggleChip(this)">Articular</div>
+            <div class="chip" onclick="toggleChip(this)">Ligamentosa</div>
+            <div class="chip" onclick="toggleChip(this)">Neural</div>
+            <div class="chip" onclick="toggleChip(this)">Discal</div>
+            <div class="chip" onclick="toggleChip(this)">Fascial</div>
+            <div class="chip" onclick="toggleChip(this)">Ósea</div>
+          </div>
+        </div>
+        <div>
+          <label style="font-family:var(--mono);font-size:9.5px;letter-spacing:0.8px;text-transform:uppercase;color:var(--ink-soft);display:block;margin-bottom:8px">Pronóstico</label>
+          <div class="chips" id="chips-pron">
+            <div class="chip" onclick="toggleChip(this)">Favorable</div>
+            <div class="chip" onclick="toggleChip(this)">Reservado</div>
+            <div class="chip" onclick="toggleChip(this)">Incierto</div>
+          </div>
+        </div>
+        <div class="field"><label>Factores pronósticos</label><textarea placeholder="Positivos y negativos..."></textarea></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card accent-teal">
+    <div class="card-header"><div class="card-header-icon">🎯</div><span class="card-title">Objetivos Terapéuticos</span></div>
+    <div class="card-body">
+      <div class="g3">
+        <div class="summary-card">
+          <div class="sc-label">Corto plazo (1–2 semanas)</div>
+          <textarea placeholder="ej. Reducir EVA a 4/10, recuperar 20° flexión..."></textarea>
+        </div>
+        <div class="summary-card">
+          <div class="sc-label">Medio plazo (1–3 meses)</div>
+          <textarea placeholder="ej. Retorno al trabajo, fuerza al 80%..."></textarea>
+        </div>
+        <div class="summary-card">
+          <div class="sc-label">Largo plazo</div>
+          <textarea placeholder="ej. Retorno deportivo, prevención recidivas..."></textarea>
+        </div>
+      </div>
+      <div class="field" style="margin-top:12px"><label>Outcome measures seleccionadas</label><input type="text" placeholder="ej. EVA, DASH, KOOS, NDI, PSFS, FABQ..."></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-header-icon" style="background:var(--amber);color:#fff">🛠</div><span class="card-title">Plan de Tratamiento</span></div>
+    <div class="card-body">
+      <div class="g2" style="gap:16px;margin-bottom:14px">
+        <div>
+          <label style="font-family:var(--mono);font-size:9.5px;letter-spacing:0.8px;text-transform:uppercase;color:var(--ink-soft);display:block;margin-bottom:8px">Técnicas manuales / invasivas</label>
+          <div class="chips" id="chips-tec">
+            <div class="chip" onclick="toggleChip(this)">Terapia manual articular</div>
+            <div class="chip" onclick="toggleChip(this)">Masoterapia</div>
+            <div class="chip" onclick="toggleChip(this)">Punción seca</div>
+            <div class="chip" onclick="toggleChip(this)">EPI / EPTE</div>
+            <div class="chip" onclick="toggleChip(this)">Movilización neural</div>
+            <div class="chip" onclick="toggleChip(this)">Manipulación</div>
+            <div class="chip" onclick="toggleChip(this)">Vendaje neuromuscular</div>
+            <div class="chip" onclick="toggleChip(this)">Inducción miofascial</div>
+          </div>
+        </div>
+        <div>
+          <label style="font-family:var(--mono);font-size:9.5px;letter-spacing:0.8px;text-transform:uppercase;color:var(--ink-soft);display:block;margin-bottom:8px">Agentes físicos</label>
+          <div class="chips" id="chips-ag">
+            <div class="chip" onclick="toggleChip(this)">TENS</div>
+            <div class="chip" onclick="toggleChip(this)">Ultrasonido</div>
+            <div class="chip" onclick="toggleChip(this)">Láser</div>
+            <div class="chip" onclick="toggleChip(this)">Ondas de choque (ESWT)</div>
+            <div class="chip" onclick="toggleChip(this)">Termoterapia</div>
+            <div class="chip" onclick="toggleChip(this)">Crioterapia</div>
+            <div class="chip" onclick="toggleChip(this)">EMS</div>
+            <div class="chip" onclick="toggleChip(this)">Magnetoterapia</div>
+          </div>
+        </div>
+      </div>
+      <div class="g2">
+        <div class="field"><label>Ejercicio terapéutico</label><textarea placeholder="Tipo, progresión, carga, frecuencia..."></textarea></div>
+        <div class="field"><label>Educación al paciente</label><textarea placeholder="Higiene postural, ergonomía, gestión de la carga, neurociencia del dolor..."></textarea></div>
+      </div>
+      <div class="g3" style="margin-top:12px">
+        <div class="field"><label>Sesiones / semana</label><select><option>—</option><option>1×/semana</option><option>2×/semana</option><option>3×/semana</option><option>Diario</option><option>A demanda</option></select></div>
+        <div class="field"><label>Duración estimada</label><select><option>—</option><option>1–2 semanas</option><option>3–6 semanas</option><option>2–3 meses</option><option>3–6 meses</option><option>Mantenimiento crónico</option></select></div>
+        <div class="field"><label>Derivación necesaria</label>
+          <div class="chips" id="chips-der">
+            <div class="chip" onclick="toggleChip(this)">No precisa</div>
+            <div class="chip" onclick="toggleChip(this)">Médico</div>
+            <div class="chip" onclick="toggleChip(this)">Urgencias</div>
+            <div class="chip" onclick="toggleChip(this)">Psicólogo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="border-color:var(--teal);background:linear-gradient(135deg,#f0faf9,#fff)">
+    <div class="card-header" style="background:var(--teal-light);border-color:#b2d8d8"><div class="card-header-icon" style="background:var(--teal-dark);color:#fff">📋</div><span class="card-title" style="color:var(--teal-dark)">Resumen Clínico para Historia</span></div>
+    <div class="card-body">
+      <div class="field"><textarea style="min-height:130px" placeholder="Resumen narrativo del caso: motivo, hallazgos clave, diagnóstico fisioterapéutico, plan propuesto...&#10;Este texto se incluirá en el documento final." oninput="updateProg()"></textarea></div>
+      <div class="signature-row" style="margin-top:20px">
+        <div class="signature-box">
+          <div class="field" style="width:100%"><label>Fecha de la valoración</label><input type="date"></div>
+        </div>
+        <div class="signature-box">
+          <div class="field" style="width:100%"><label>Nº Colegiado</label><input type="text" placeholder="—"></div>
+        </div>
+      </div>
+      <div class="signature-row">
+        <div class="signature-box">
+          <div class="signature-area"></div>
+          <div class="signature-label">Firma del fisioterapeuta</div>
+        </div>
+        <div class="signature-box">
+          <div class="signature-area"></div>
+          <div class="signature-label">Sello de la clínica</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════════
+  PANEL 12 — RESUMEN ANAMNESIS
+══════════════════════════════════════════════════════════════════════════ -->
+<div class="panel" id="p12">
+  <div class="page-header">
+    <div class="page-header-left">
+      <div class="page-number">13 · Síntesis</div>
+      <h1 class="page-title">Resumen de <em>Anamnesis</em></h1>
+      <p class="page-subtitle">Síntesis automática de los datos introducidos · Guardar y exportar</p>
+    </div>
+    <div class="nav-arrows">
+      <button class="btn-arrow" onclick="go(11)">←</button>
+      <button class="btn-arrow" disabled>✓</button>
+    </div>
+  </div>
+  <div id="resumen-content">
+    <div style="padding:40px;text-align:center;color:var(--ink-soft)">
+      <div style="font-size:2.5rem;margin-bottom:12px">📋</div>
+      <div style="font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:1px">Haz clic en "Actualizar Resumen" para generar el resumen automático</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+    <button onclick="buildResumen()" style="padding:10px 22px;background:var(--blue,#1e3a5f);color:#fff;border:none;border-radius:8px;font-family:var(--mono);font-size:11px;cursor:pointer;letter-spacing:.5px">🔄 ACTUALIZAR RESUMEN</button>
+    <button onclick="saveToLocal()" style="padding:10px 22px;background:var(--teal,#0d6e6e);color:#fff;border:none;border-radius:8px;font-family:var(--mono);font-size:11px;cursor:pointer;letter-spacing:.5px">💾 GUARDAR EN NAVEGADOR</button>
+    <button onclick="printSession()" style="padding:10px 22px;background:var(--ink,#0f1117);color:#fff;border:none;border-radius:8px;font-family:var(--mono);font-size:11px;cursor:pointer;letter-spacing:.5px">🖨 IMPRIMIR / PDF</button>
+  </div>
+</div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+// ── PANELS & NAV ────────────────────────────────────────────────────────────
+const PANELS = 13;
+const TITLES = [
+  'Protección de Datos','Consentimiento Invasivo','Datos & Historia',
+  'Motivo de Consulta','Análisis del Dolor','Body Chart',
+  'Análisis Postural','Movilidad','Fuerza Muscular',
+  'Valoración Neurológica','Tests Ortopédicos','Razonamiento Clínico','Resumen Anamnesis'
+];
+let current = 0;
+
+function go(n) {
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('p'+n).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('active'));
+  document.querySelectorAll('.nav-item')[n].classList.add('active');
+  document.getElementById('topbar-title').textContent = TITLES[n];
+  current = n;
+  if(n === 12) buildResumen();
+  window.scrollTo(0,0);
+}
+
+// ── PROGRESS ────────────────────────────────────────────────────────────────
+function updateProg() {
+  const all = document.querySelectorAll('input[type=text],input[type=number],input[type=date],select,textarea');
+  let done = 0;
+  all.forEach(el => { if(el.value && el.value !== '—') done++; });
+  const pct = Math.round((done/all.length)*100);
+  document.getElementById('pbar').style.width = pct+'%';
+  document.getElementById('ptext').textContent = pct+'%';
+  // Mark done tabs
+  document.querySelectorAll('.nav-item').forEach((item,i) => {
+    const panel = document.getElementById('p'+i);
+    if(!panel) return;
+    const panelInputs = panel.querySelectorAll('input,select,textarea');
+    let filled = 0;
+    panelInputs.forEach(el => { if(el.value && el.value !== '—') filled++; });
+    const dot = item.querySelector('.nav-dot');
+    if(dot) dot.style.background = (filled > panelInputs.length * 0.3) ? 'var(--teal-mid)' : '';
+  });
+}
+document.addEventListener('input', updateProg);
+document.addEventListener('change', updateProg);
+
+// ── CHIPS ────────────────────────────────────────────────────────────────────
+function toggleChip(el) {
+  el.classList.toggle('sel');
+  updateProg();
+}
+
+// ── CHECKBOXES ───────────────────────────────────────────────────────────────
+function toggleCheck(item) {
+  const cb = item.querySelector('input[type=checkbox]');
+  cb.checked = !cb.checked;
+  item.classList.toggle('checked', cb.checked);
+}
+
+// ── FLAGS ────────────────────────────────────────────────────────────────────
+function toggleFlagRed(item) {
+  const cb = item.querySelector('input[type=checkbox]');
+  cb.checked = !cb.checked;
+  item.classList.toggle('flagged-red', cb.checked);
+}
+function toggleFlagYellow(item) {
+  const cb = item.querySelector('input[type=checkbox]');
+  cb.checked = !cb.checked;
+  item.classList.toggle('flagged-yellow', cb.checked);
+}
+
+// ── SELECT COLORING ──────────────────────────────────────────────────────────
+function colorSel(sel) {
+  const v = sel.value;
+  sel.className = 'result-sel';
+  if(v.includes('+') || v.includes('Positivo') || v.includes('Hiperreflexia') ||
+     v.includes('H=') || v.includes('Hiporreflexia') || v.includes('Arreflexia') ||
+     v === 'H' || v === 'HE' || v === 'A' || v.includes('Alt.') ||
+     v.includes('alta prob') || v.includes('indicada')) {
+    sel.classList.add('pos');
+  } else if(v.includes('–') || v.includes('Negativo') || v.includes('Normal') ||
+            v === 'N' || v.includes('baja prob') || v.includes('No')) {
+    sel.classList.add('neg');
+  }
+}
+
+// ── BODY CHART ───────────────────────────────────────────────────────────────
+let currentTool = 'dolor';
+let currentColor = '#dc2626';
+const dotHistory = { 'bc-ant': [], 'bc-post': [] };
+
+function setTool(tool, color, btn) {
+  currentTool = tool;
+  currentColor = color;
+  document.querySelectorAll('.tool-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+function addDot(e, chartId) {
+  const wrap = document.getElementById(chartId);
+  if(currentTool === 'eraser') {
+    const dots = dotHistory[chartId];
+    if(dots && dots.length) { dots[dots.length-1].remove(); dots.pop(); }
+    return;
+  }
+  const rect = wrap.getBoundingClientRect();
+  const x = ((e.clientX - rect.left) / rect.width) * 100;
+  const y = ((e.clientY - rect.top) / rect.height) * 100;
+  const dot = document.createElement('div');
+  dot.className = 'pain-dot';
+  dot.style.cssText = `left:${x}%;top:${y}%;width:14px;height:14px;background:${currentColor};`;
+  dot.title = currentTool;
+  wrap.appendChild(dot);
+  if(dotHistory[chartId]) dotHistory[chartId].push(dot);
+  updateProg();
+}
+function clearChart() {
+  document.querySelectorAll('.pain-dot').forEach(d=>d.remove());
+  dotHistory['bc-ant'] = []; dotHistory['bc-post'] = [];
+}
+
+// ── ZONE TABS ────────────────────────────────────────────────────────────────
+function showZone(prefix, id, btn) {
+  document.querySelectorAll(`.${prefix}-section`).forEach(s=>s.style.display='none');
+  const el = document.getElementById(`${prefix}-${id}`);
+  if(el) el.style.display = 'block';
+  // Find sibling tabs
+  const parent = btn.closest('.card-body') || btn.closest('.zone-tabs');
+  const container = btn.closest('.zone-tabs');
+  if(container) container.querySelectorAll('.zone-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+}
+// Toggleable version — click again to close, multiple can be open
+function toggleZone(prefix, id, btn) {
+  const el = document.getElementById(`${prefix}-${id}`);
+  if(!el) return;
+  const isOpen = el.style.display === 'block';
+  el.style.display = isOpen ? 'none' : 'block';
+  btn.classList.toggle('active', !isOpen);
+}
+
+// ── MRC TABLE BUILDER ────────────────────────────────────────────────────────
+const mmssData = ['Trapecio (elevación hombro)','Deltoides (abducción)','Bíceps braquial (flexión)','Tríceps braquial (extensión)','Rotadores externos (RE)','Rotadores internos (RI)','Extensores de muñeca','Flexores de muñeca','Interóseos (abducción dedos)'];
+const mmiiData = ['Iliopsoas (flexión cadera)','Glúteo mayor (extensión cadera)','Glúteo medio (abducción)','Cuádriceps (extensión rodilla)','Isquiotibiales (flexión rodilla)','Tibial anterior (flex. dorsal)','Tríceps sural (flex. plantar)','Peroneos (eversión)','Tibial posterior (inversión)'];
+const troncoData = ['Recto abdominal','Oblicuos (rotación)','Transverso abdominal (core)','Multífidos','Erectores espinales','Musculatura suelo pélvico'];
+
+let mrcCounter = 0;
+function mrcCell(id) {
+  return `<div class="mrc-scale" id="mrc-${id}">${[0,1,2,3,4,5].map(n=>`<button class="mrc-btn" onclick="setMrc('${id}',${n},this)">${n}</button>`).join('')}</div>`;
+}
+function setMrc(id, val, btn) {
+  document.querySelectorAll(`#mrc-${id} .mrc-btn`).forEach(b => {
+    b.className = 'mrc-btn';
+    if(parseInt(b.textContent) <= val) {
+      if(val >= 4) b.classList.add('sel');
+      else if(val === 3) b.classList.add('sel');
+      else if(val === 2) b.classList.add('sel-2');
+      else b.classList.add('sel-1');
+    }
+  });
+}
+
+function buildMrcRow(muscle, bodyId, mode) {
+  const id = mrcCounter++;
+  if(mode === 'sides') {
+    return `<tr><td>${muscle}</td><td style="text-align:center">${mrcCell('d'+bodyId+id)}</td><td style="text-align:center">${mrcCell('i'+bodyId+id)}</td><td><input type="number" style="width:62px;padding:4px 6px;border:1.5px solid var(--border);border-radius:5px;font-family:var(--sans);font-size:12px;outline:none" placeholder="—"></td><td><input type="number" style="width:62px;padding:4px 6px;border:1.5px solid var(--border);border-radius:5px;font-family:var(--sans);font-size:12px;outline:none" placeholder="—"></td><td><input type="text" style="width:100%;font-family:var(--sans);font-size:12px;padding:4px 8px;border:1.5px solid var(--border);border-radius:5px;outline:none" placeholder="obs..."></td></tr>`;
+  } else {
+    return `<tr><td>${muscle}</td><td style="text-align:center">${mrcCell('s'+bodyId+id)}</td><td><input type="number" style="width:80px;padding:4px 6px;border:1.5px solid var(--border);border-radius:5px;font-family:var(--sans);font-size:12px;outline:none" placeholder="—"></td><td><input type="text" style="width:100%;font-family:var(--sans);font-size:12px;padding:4px 8px;border:1.5px solid var(--border);border-radius:5px;outline:none" placeholder="obs..."></td></tr>`;
+  }
+}
+
+function buildMrcTable(bodyId, muscles, mode) {
+  const tbody = document.getElementById(bodyId);
+  if(!tbody) return;
+  tbody.innerHTML = muscles.map(m => buildMrcRow(m, bodyId, mode)).join('');
+}
+
+function addCustomRow(bodyId, mode) {
+  const tbody = document.getElementById(bodyId);
+  if(!tbody) return;
+  const id = mrcCounter++;
+  let tr;
+  if(mode === 'sides') {
+    tr = document.createElement('tr');
+    tr.innerHTML = `<td><input type="text" style="width:100%;font-family:var(--sans);font-size:12px;padding:4px 8px;border:1.5px solid var(--border);border-radius:5px;outline:none" placeholder="Nombre del músculo..."></td><td style="text-align:center">${mrcCell('cd'+id)}</td><td style="text-align:center">${mrcCell('ci'+id)}</td><td><input type="number" style="width:62px;padding:4px 6px;border:1.5px solid var(--border);border-radius:5px;font-family:var(--sans);font-size:12px;outline:none" placeholder="—"></td><td><input type="number" style="width:62px;padding:4px 6px;border:1.5px solid var(--border);border-radius:5px;font-family:var(--sans);font-size:12px;outline:none" placeholder="—"></td><td><input type="text" style="width:100%;font-family:var(--sans);font-size:12px;padding:4px 8px;border:1.5px solid var(--border);border-radius:5px;outline:none" placeholder="observaciones..."></td><td><button onclick="this.closest('tr').remove()" style="border:none;background:none;cursor:pointer;color:#dc2626;font-size:16px;padding:2px 6px">✕</button></td>`;
+  } else {
+    tr = document.createElement('tr');
+    tr.innerHTML = `<td><input type="text" style="width:100%;font-family:var(--sans);font-size:12px;padding:4px 8px;border:1.5px solid var(--border);border-radius:5px;outline:none" placeholder="Nombre del músculo..."></td><td style="text-align:center">${mrcCell('cs'+id)}</td><td><input type="number" style="width:80px;padding:4px 6px;border:1.5px solid var(--border);border-radius:5px;font-family:var(--sans);font-size:12px;outline:none" placeholder="—"></td><td><input type="text" style="width:100%;font-family:var(--sans);font-size:12px;padding:4px 8px;border:1.5px solid var(--border);border-radius:5px;outline:none" placeholder="observaciones..."></td><td><button onclick="this.closest('tr').remove()" style="border:none;background:none;cursor:pointer;color:#dc2626;font-size:16px;padding:2px 6px">✕</button></td>`;
+  }
+  tbody.appendChild(tr);
+}
+
+buildMrcTable('b-mmss-body', mmssData, 'sides');
+buildMrcTable('b-mmii-body', mmiiData, 'sides');
+buildMrcTable('b-tronco-body', troncoData, 'single');
+
+// ── SAVE / LOAD (localStorage) ────────────────────────────────────────────────
+// removed duplicate
+
+function printSession() {
+  // Ensure all panels visible for print
+  document.querySelectorAll('.panel').forEach(p => p.style.display = 'block');
+  window.print();
+  setTimeout(() => {
+    document.querySelectorAll('.panel').forEach((p,i) => p.style.display = i === current ? 'block' : 'none');
+    document.getElementById('p'+current).style.display = 'block';
+  }, 1000);
+}
+
+function showToast(msg) {
+  let t = document.getElementById('toast');
+  if(!t) { t = document.createElement('div'); t.id='toast'; t.style.cssText='position:fixed;bottom:24px;right:24px;background:#0f1117;color:#fff;padding:12px 20px;border-radius:8px;font-family:var(--mono);font-size:12px;z-index:9999;opacity:0;transition:opacity .3s;max-width:320px;box-shadow:0 4px 16px rgba(0,0,0,.3)'; document.body.appendChild(t); }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  clearTimeout(t._to);
+  t._to = setTimeout(() => t.style.opacity='0', 3500);
+}
+
+function saveSession() { saveToLocal(); }
+
+function clearAll() {
+  if(!confirm('¿Limpiar toda la historia clínica?')) return;
+  document.querySelectorAll('input,textarea').forEach(i=>i.value='');
+  document.querySelectorAll('select').forEach(s=>s.selectedIndex=0);
+  document.querySelectorAll('.chip.sel').forEach(c=>c.classList.remove('sel'));
+  document.querySelectorAll('.checkbox-item.checked').forEach(c=>c.classList.remove('checked'));
+  document.querySelectorAll('.checkbox-item input').forEach(c=>c.checked=false);
+  document.querySelectorAll('.flag-item.flagged-red').forEach(f=>{f.classList.remove('flagged-red');f.querySelector('input').checked=false;});
+  document.querySelectorAll('.flag-item.flagged-yellow').forEach(f=>{f.classList.remove('flagged-yellow');f.querySelector('input').checked=false;});
+  document.querySelectorAll('.pain-dot').forEach(d=>d.remove());
+  document.querySelectorAll('.result-sel').forEach(s=>s.className='result-sel');
+  document.querySelectorAll('.mrc-btn').forEach(b=>b.className='mrc-btn');
+  dotHistory['bc-ant']=[]; dotHistory['bc-post']=[];
+  updateProg();
+}
+
+function saveToLocal() {
+  try {
+    const allInputs = [];
+    document.querySelectorAll('.panel input, .panel textarea, .panel select').forEach((el,i) => {
+      allInputs.push(el.value);
+    });
+    const activeChips = [];
+    document.querySelectorAll('.chip.sel').forEach(c => activeChips.push(c.parentElement.id+'::'+c.textContent.trim()));
+    const flagsR = [], flagsY = [];
+    document.querySelectorAll('.flag-item.flagged-red label').forEach(l => flagsR.push(l.textContent.trim()));
+    document.querySelectorAll('.flag-item.flagged-yellow label').forEach(l => flagsY.push(l.textContent.trim()));
+    const mrcVals = {};
+    document.querySelectorAll('.mrc-scale').forEach(sc => {
+      let v=-1; sc.querySelectorAll('.mrc-btn').forEach((b,i)=>{ if(b.classList.length>1) v=i; }); if(v>=0) mrcVals[sc.id]=v;
+    });
+    const payload = { ts: new Date().toISOString(), inputs: allInputs, chips: activeChips, flagsR, flagsY, mrc: mrcVals };
+    localStorage.setItem('fisio_hc_v1', JSON.stringify(payload));
+    showToast('✅ Historia guardada en este navegador');
+  } catch(e) { showToast('⚠️ Error al guardar: '+e.message); }
+}
+
+function updateResumen() {
+  // Pull key fields for the summary panel
+  const allInputs = document.querySelectorAll('.panel input, .panel textarea, .panel select');
+  const vals = Array.from(allInputs).map(el => el.value);
+  // Dynamic update of summary fields if panel exists
+  const rPanel = document.getElementById('p-resumen');
+  if(!rPanel) return;
+  // The summary panel will re-read live fields when shown
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+document.getElementById('f-consulta') && (document.getElementById('f-consulta').value = new Date().toISOString().split('T')[0]);
+document.getElementById('fecha-consulta') && (document.getElementById('fecha-consulta').value = new Date().toISOString().split('T')[0]);
+
+// Build resumen panel dynamically when opened
+function buildResumen() {
+  const r = document.getElementById('resumen-content');
+  if(!r) return;
+
+  // Helper: get first non-empty input value from a list of selectors
+  function g(sel) { const el = document.querySelector(sel); return el ? el.value.trim() : ''; }
+  function gAll(sel) { return Array.from(document.querySelectorAll(sel)).map(e=>e.value.trim()).filter(Boolean).join(', '); }
+  function gChips(parentSel) { return Array.from(document.querySelectorAll(parentSel + ' .chip.sel')).map(c=>c.textContent.trim()).join(', ') || '—'; }
+
+  // Gather panel 2 (datos)
+  const nombre = gAll('#p2 input[type=text]') || gAll('#p2 input') || '—';
+  // Gather panel 3 (motivo)
+  const motivos = Array.from(document.querySelectorAll('#p3 textarea')).map(t=>t.value.trim()).filter(Boolean);
+  const bandRojas = Array.from(document.querySelectorAll('#p3 .flagged-red label')).map(l=>l.textContent.trim());
+  const bandAmar = Array.from(document.querySelectorAll('#p3 .flagged-yellow label')).map(l=>l.textContent.trim());
+  // Gather panel 4 (dolor)
+  const evas = Array.from(document.querySelectorAll('#p4 .vas-val')).map(e=>e.textContent.trim());
+  const tipoDolor = Array.from(document.querySelectorAll('#chips-tipo .chip.sel')).map(c=>c.textContent.trim()).join(', ') || '—';
+  const tempDolor = Array.from(document.querySelectorAll('#chips-temp .chip.sel')).map(c=>c.textContent.trim()).join(', ') || '—';
+  // Gather panel 9 (neurológico)
+  const reflejos = Array.from(document.querySelectorAll('#p9 .data-table tbody tr')).map(tr=>{
+    const cells = tr.querySelectorAll('td');
+    if(cells.length < 3) return null;
+    const n = cells[0].textContent.trim(); const d = cells[2]?.querySelector('select')?.value||'—'; const i = cells[3]?.querySelector('select')?.value||'—';
+    if(d==='—' && i==='—') return null;
+    return `${n}: D=${d} / I=${i}`;
+  }).filter(Boolean);
+  // Gather razonamiento
+  const hipotesis = Array.from(document.querySelectorAll('#p11 .summary-card textarea')).map(t=>t.value.trim()).filter(Boolean);
+  const objetivos = Array.from(document.querySelectorAll('#p11 .summary-card textarea')).map(t=>t.value.trim()).filter(Boolean);
+  const plan = Array.from(document.querySelectorAll('#p11 textarea')).map(t=>t.value.trim()).filter(Boolean);
+
+  const ts = new Date().toLocaleDateString('es-ES', {day:'2-digit',month:'long',year:'numeric', hour:'2-digit', minute:'2-digit'});
+
+  r.innerHTML = `
+  <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:24px 28px;margin-bottom:16px">
+    <div style="font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--ink-soft);margin-bottom:4px">Generado el ${ts}</div>
+    <h2 style="font-family:var(--serif);font-style:italic;font-size:1.6rem;color:var(--navy,#1b3a5c);margin-bottom:0">Resumen de la Historia Clínica</h2>
+  </div>
+
+  <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:14px">
+    <div style="font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:1.2px;color:var(--teal);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)">● Anamnesis — Motivo de Consulta</div>
+    ${motivos.length ? motivos.map((t,i)=>`<p style="font-size:13px;color:var(--ink-mid);line-height:1.6;margin-bottom:6px"><strong>${['Queja principal','Mecanismo / Evolución','Influencia AVD','Sueño / Kinesofobia','Pregunta 5','Pregunta 6'][i]||''}:</strong> ${t}</p>`).join('') : '<p style="color:var(--ink-faint);font-size:13px">Sin datos introducidos en el panel de Motivo de Consulta.</p>'}
+    ${bandRojas.length ? `<div style="margin-top:10px;padding:10px 14px;background:#fef2f2;border-radius:8px;border-left:3px solid #dc2626"><strong style="font-size:12px;color:#991b1b">🔴 Banderas Rojas presentes:</strong> <span style="font-size:12px;color:#991b1b">${bandRojas.join(' · ')}</span></div>` : ''}
+    ${bandAmar.length ? `<div style="margin-top:8px;padding:10px 14px;background:#fffbeb;border-radius:8px;border-left:3px solid #d97706"><strong style="font-size:12px;color:#b45309">🟡 Banderas Amarillas:</strong> <span style="font-size:12px;color:#b45309">${bandAmar.join(' · ')}</span></div>` : ''}
+  </div>
+
+  <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:14px">
+    <div style="font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:1.2px;color:var(--amber,#b45309);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)">● Análisis del Dolor</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:12px">
+      ${['Reposo','Movimiento','Peor 24h','Mejor 24h'].map((l,i)=>`<div style="text-align:center;padding:10px;background:var(--bg-warm,#ede9e2);border-radius:8px"><div style="font-family:var(--mono);font-size:10px;color:var(--ink-soft);margin-bottom:4px">${l}</div><div style="font-family:var(--serif);font-style:italic;font-size:2rem;color:var(--ink)">${evas[i]||'—'}/10</div></div>`).join('')}
+    </div>
+    <p style="font-size:13px;color:var(--ink-mid);margin-bottom:4px"><strong>Tipo:</strong> ${tipoDolor}</p>
+    <p style="font-size:13px;color:var(--ink-mid)"><strong>Comportamiento:</strong> ${tempDolor}</p>
+  </div>
+
+  <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:14px">
+    <div style="font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:1.2px;color:var(--blue,#1e3a5f);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)">● Exploración Neurológica</div>
+    ${reflejos.length ? `<p style="font-size:13px;color:var(--ink-mid);line-height:1.8">${reflejos.join('<br>')}</p>` : '<p style="color:var(--ink-faint);font-size:13px">Sin reflejos valorados.</p>'}
+  </div>
+
+  <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:14px">
+    <div style="font-family:var(--mono);font-size:9px;text-transform:uppercase;letter-spacing:1.2px;color:var(--teal);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)">● Razonamiento Clínico & Plan</div>
+    ${hipotesis.length ? hipotesis.map((t,i)=>`<p style="font-size:13px;color:var(--ink-mid);line-height:1.6;margin-bottom:8px"><strong>${['Hipótesis diagnóstica','Diagnóstico diferencial','Estructura implicada','Pronóstico','Objetivos CP','Objetivos MP','Objetivos LP','Outcome Measures','Plan'][i]||'Notas'}:</strong> ${t}</p>`).join('') : '<p style="color:var(--ink-faint);font-size:13px">Sin razonamiento clínico introducido.</p>'}
+  </div>
+
+  <div style="display:flex;gap:10px;margin-top:8px">
+    <button onclick="saveToLocal()" style="padding:10px 20px;background:var(--teal,#0d6e6e);color:#fff;border:none;border-radius:8px;font-family:var(--mono);font-size:11px;cursor:pointer;letter-spacing:.5px">💾 GUARDAR EN NAVEGADOR</button>
+    <button onclick="printSession()" style="padding:10px 20px;background:var(--ink,#0f1117);color:#fff;border:none;border-radius:8px;font-family:var(--mono);font-size:11px;cursor:pointer;letter-spacing:.5px">🖨 IMPRIMIR / PDF</button>
+  </div>`;
+}
+
+updateProg();
+</script>
+</body>
+</html>
